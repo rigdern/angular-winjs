@@ -9,7 +9,13 @@ In order to use Angular in the Windows application environment you need to do a 
 
 [0]: http://msdn.microsoft.com/en-us/library/windows/apps/hh767331.aspx
 [1]: http://msdn.microsoft.com/en-us/library/windows/apps/hh465388.aspx
-  
+
+Add the following to the HEAD of the document:
+
+    <script src="/js/lib/jquery.js"></script>
+    <script src="/js/lib/angular.js"></script>
+    <script src="/js/lib/angular-winjs.js"></script>
+
 The test app itself is pretty simple, it has a ListView which renders Rating controls for a bunch of fake people as well as telling you what the sum of all the ratings is.
 
 ![screenshot](https://raw.github.com/codemonkeychris/angular-winjs/master/test/AngularWinJSTest/screenshot.png)
@@ -47,3 +53,5 @@ And the HTML is:
             <win-list-layout></win-list-layout>
         </win-list-view>
     </body>
+
+    

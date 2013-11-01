@@ -3,6 +3,17 @@
 
     var module = angular.module("winjs", []);
 
+    module.run(function ($rootScope) {
+        var Scope = Object.getPrototypeOf($rootScope);
+        var Scope$eval= Scope.$eval;
+        Scope.$eval = function (expr, locals) {
+            var that = this;
+            return MSApp.execUnsafeLocalFunction(function () {
+                return Scope$eval.call(this, expr, locals);
+            });
+        };
+    })
+
     function getTemplate(elementType, transclude) {
         var template = "";
         if (elementType) {

@@ -1,0 +1,14 @@
+﻿.win-listview {
+    height: 500px;
+}
+
+.win-listview .win-container {
+    height: 50px;
+}
+
+.win-listview .win-item {
+    background-color: #5888DB;
+    height: 100%;
+    width: 100%;
+}
+

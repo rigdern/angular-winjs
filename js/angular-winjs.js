@@ -195,7 +195,9 @@
             elementType: "BUTTON",
             transclude: true,
         },
-        "WinJS.UI.BackButton": {},
+        "WinJS.UI.BackButton": {
+            elementType: "BUTTON",
+        },
         "WinJS.UI.DatePicker": {
             postLink: [eventPropertySet("change", "current")],
         },

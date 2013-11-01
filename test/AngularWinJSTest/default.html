@@ -11,7 +11,6 @@
 
     <!-- dependencies -->
     <script src="/js/lib/jquery.js"></script>
-    <script>$.isUnsafe = true;</script>
     <script src="/js/lib/angular.js"></script>
     <script src="/js/lib/angular-winjs.js"></script>
 
@@ -20,9 +19,12 @@
     <script src="/js/default.js"></script>
 </head>
 <body>
-    <h2>Hi {{name}}, your rating is: {{rating}} (<win-rating max-rating="5" user-rating="rating"></win-rating>)</h2>
+    <h2>Hi {{name}}, your rating is: {{ratings[0].rating}} (<win-rating max-rating="5" user-rating="ratings[0].rating"></win-rating>)</h2>
+    <br/>
+    <h1>The total rating is: {{sum()}}</h1>
+    <br/>
     <win-list-view item-data-source="ratings">
-        <win-item-template>Rating: {{item.data}}</win-item-template>
+        <win-item-template>{{item.data.name}}'s rating: <win-rating max-rating="5" user-rating="item.data.rating"></win-rating></win-item-template>
         <win-list-layout></win-list-layout>
     </win-list-view>
 </body>

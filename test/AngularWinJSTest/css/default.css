@@ -8,7 +8,8 @@
 
 .win-listview .win-item {
     background-color: #5888DB;
-    height: 100%;
-    width: 100%;
+    height: calc(100% - 20px);
+    width: calc(100% - 20px);
+    padding: 10px;
 }
 

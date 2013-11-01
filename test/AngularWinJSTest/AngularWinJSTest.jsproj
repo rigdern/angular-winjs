@@ -67,6 +67,7 @@
     <Content Include="css\default.css" />
     <Content Include="js\lib\angular.js" />
     <Content Include="js\lib\jquery.js" />
+    <Content Include="screenshot.png" />
     <None Include="AngularWinJSTest_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

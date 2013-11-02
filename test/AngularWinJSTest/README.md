@@ -12,9 +12,11 @@ In order to use Angular in the Windows application environment you need to do a 
 
 Add the following to the HEAD of the document:
 
-    <script src="/js/lib/jquery.js"></script>
-    <script src="/js/lib/angular.js"></script>
-    <script src="/js/lib/angular-winjs.js"></script>
+```HTML
+<script src="/js/lib/jquery.js"></script>
+<script src="/js/lib/angular.js"></script>
+<script src="/js/lib/angular-winjs.js"></script>
+```
 
 The test app itself is pretty simple, it has a ListView which renders Rating controls for a bunch of fake people as well as telling you what the sum of all the ratings is.
 
@@ -22,36 +24,39 @@ The test app itself is pretty simple, it has a ListView which renders Rating con
 
 The JS for the app is:
 
-    var app = angular.module("app", ["winjs"]);
+```JavaScript
+var app = angular.module("app", ["winjs"]);
 
-    app.controller("AppController", function ($scope) {
-        var names = ["Josh", "Paul", "Chris", "Ales"]
-        $scope.name = "Josh Williams";
-        $scope.rating = 3;
-        var ratings = [];
-        for (var i = 0; i < 250; i++) {
-            ratings.push({
-                name: names[i % names.length] + ((i / 4) | 0),
-                rating: (i % 5) + 1
-            });
-        }
-        $scope.ratings = ratings;
-        $scope.sum = function () {
-            return ratings.reduce(function (t, v) { return t + (+v.rating); }, 0);
-        };
-    })
+app.controller("AppController", function ($scope) {
+    var names = ["Josh", "Paul", "Chris", "Ales"]
+    $scope.name = "Josh Williams";
+    $scope.rating = 3;
+    var ratings = [];
+    for (var i = 0; i < 250; i++) {
+        ratings.push({
+            name: names[i % names.length] + ((i / 4) | 0),
+            rating: (i % 5) + 1
+        });
+    }
+    $scope.ratings = ratings;
+    $scope.sum = function () {
+        return ratings.reduce(function (t, v) { return t + (+v.rating); }, 0);
+    };
+})
+```
 
 And the HTML is:
 
-    <body>
-        <h2>Hi {{name}}, your rating is: {{ratings[0].rating}} (<win-rating max-rating="5" user-rating="ratings[0].rating"></win-rating>)</h2>
-        <br/>
-        <h1>The total rating is: {{sum()}}</h1>
-        <br/>
-        <win-list-view item-data-source="ratings">
-            <win-item-template>{{item.data.name}}'s rating: <win-rating max-rating="5" user-rating="item.data.rating"></win-rating></win-item-template>
-            <win-list-layout></win-list-layout>
-        </win-list-view>
-    </body>
-
+```HTML
+<body>
+    <h2>Hi {{name}}, your rating is: {{ratings[0].rating}} (<win-rating max-rating="5" user-rating="ratings[0].rating"></win-rating>)</h2>
+    <br/>
+    <h1>The total rating is: {{sum()}}</h1>
+    <br/>
+    <win-list-view item-data-source="ratings">
+        <win-item-template>{{item.data.name}}'s rating: <win-rating max-rating="5" user-rating="item.data.rating"></win-rating></win-item-template>
+        <win-list-layout></win-list-layout>
+    </win-list-view>
+</body>
+```
     

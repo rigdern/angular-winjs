@@ -48,6 +48,11 @@ app.controller("AppController", function ($scope) {
 And the HTML is:
 
 ```HTML
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="app" ng-controller="AppController">
+<head>
+    <!-- omitted for brevity -->
+</head>
 <body>
     <h2>Hi {{name}}, your rating is: {{ratings[0].rating}} (<win-rating max-rating="5" user-rating="ratings[0].rating"></win-rating>)</h2>
     <br/>
@@ -58,5 +63,6 @@ And the HTML is:
         <win-list-layout></win-list-layout>
     </win-list-view>
 </body>
+</html>
 ```
     

@@ -5,7 +5,7 @@ In order to use Angular in the Windows application environment you need to do a 
 
 * You need to use jQuery, which has done work to address some security boundaries in the Windows HTML application environment, current versions of jQuery work great. In this test app I grabbed the latest released jQuery 2.0 and dropped it in my app.
 * You need to use AngularJS. I grabbed the latest 1.2.0-rc3 build off of their site and dropped it in my app.
-* Unforunately right now there is a line at the end of the angular.js file which triggers the Windows 8 app enviornment's [HTML security][1], in order to work around this wrap the last line of the file in a call to [MSApp.execUnsafeLocalFunction][0]
+* Unfortunately right now there is a line at the end of the angular.js file which triggers the Windows 8 app environment's [HTML security][1], in order to work around this wrap the last line of the file in a call to [MSApp.execUnsafeLocalFunction][0]
 
 [0]: http://msdn.microsoft.com/en-us/library/windows/apps/hh767331.aspx
 [1]: http://msdn.microsoft.com/en-us/library/windows/apps/hh465388.aspx

@@ -5,21 +5,23 @@
     <title>AngularWinJSTest</title>
 
     <!-- WinJS references -->
-    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <link href="//Microsoft.WinJS.2.0/css/ui-light.css" rel="stylesheet" />
     <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
     <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
 
     <!-- dependencies -->
     <script src="/js/lib/jquery.js"></script>
     <script src="/js/lib/angular.js"></script>
+    <script src="/js/lib/angular-sanitize.js"></script>
     <script src="/js/lib/angular-winjs.js"></script>
 
     <!-- AngularWinJSTest references -->
     <link href="/css/default.css" rel="stylesheet" />
     <script src="/js/default.js"></script>
 </head>
-<body ng-app="app" ng-controller="AppController">
-    Hi: {{foo}}
-    <showdown src="/readme.md"></showdown>
+<body>
+    <div id="content-viewport">
+        <markdown id="content" path="path"></markdown>
+    </div>
 </body>
 </html>

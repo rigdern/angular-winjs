@@ -58,6 +58,9 @@
     <Content Include="..\..\js\angular-winjs.js">
       <Link>js\lib\angular-winjs.js</Link>
     </Content>
+    <Content Include="..\..\README.md">
+      <Link>README.md</Link>
+    </Content>
     <Content Include="..\AngularWinJSTest\js\lib\angular.js">
       <Link>js\lib\angular.js</Link>
     </Content>
@@ -71,14 +74,11 @@
     <Content Include="images\storelogo.scale-100.png" />
     <Content Include="js\default.js" />
     <Content Include="css\default.css" />
-    <Content Include="readme.md" />
+    <Content Include="js\lib\angular-sanitize.js" />
     <None Include="Readme_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.WinJS.2.0, Version=1.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="js\lib\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
   <!-- To modify your build process, add your task inside one of the targets below then uncomment

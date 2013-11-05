@@ -24,6 +24,7 @@ Examples of control usage
 
 ### AppBar and AppBarCommand
 
+    <!-- Shows up on the bottom of the screen, use right-click or touch edgy gesture to show -->
     <win-app-bar>
         <win-app-bar-command icon="'home'" label="'Home'"></win-app-bar-command>
         <win-app-bar-command icon="'save'" label="'Save'"></win-app-bar-command>
@@ -31,6 +32,7 @@ Examples of control usage
 
 ### BackButton
 
+    <!-- Won't show up unless you use WinJS.Navigation stack -->
     <win-back-button></win-back-button>
 
 ### DatePicker
@@ -87,6 +89,7 @@ Examples of control usage
 
 ### NavBar and friends
 
+    <!-- Shows up on the top of the screen, use right-click or touch edgy gesture to show -->
     <win-nav-bar>
         <win-nav-bar-container>
             <win-nav-bar-command label="'Home'" icon="'home'" tooltip="'Go home!!'"></win-nav-bar-command>
@@ -96,8 +99,8 @@ Examples of control usage
 
 ### Rating
 
-    The current rating is: {{rating}}.<br/>
-    <win-rating max-rating="5" user-rating="rating"></win-rating>
+    The current rating is: {{ratings[0].rating}}.<br/>
+    <win-rating max-rating="5" user-rating="ratings[0].rating"></win-rating>
 
 ### SearchBox
 

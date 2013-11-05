@@ -53,17 +53,17 @@
         return api;
     }
 
-    function createOptions(processors, $scope, keys, getControl) {
+    function createOptions(processors, $scope, keys, getControl, element) {
         processors = processors || {};
         function update(key, $new, $old) {
             if ($new !== $old) {
-                getControl()[key] = (processors[key] || angular.identity)($new, $old, getControl);
+                getControl()[key] = (processors[key] || angular.identity)($new, $old, getControl, element);
             }
         }
         return keys.reduce(function (options, key) {
             var value = $scope[key];
             if (value) {
-                options[key] = (processors[key] || angular.identity)(value, null, getControl);
+                options[key] = (processors[key] || angular.identity)(value, null, getControl, element);
             }
             $scope.$watch(key, function ($new, $old) {
                 update(key, $new, $old);
@@ -85,7 +85,7 @@
             link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var control;
-                var options = createOptions($scope, scopeSpecKeys, function () { return control; });
+                var options = createOptions($scope, scopeSpecKeys, function () { return control; }, element);
                 preLink.forEach(function (f) { f($scope, options); });
                 control = new ctor(element, options);
                 postLink.forEach(function (f) { f($scope, control); });
@@ -143,9 +143,17 @@
         });
     }
 
-    function anchorUpdate($new, $old, getControl) {
-        $new = typeof $new === "string" ? document.querySelector($new) : $new;
-        $old = typeof $old === "string" ? document.querySelector($old) : $old;
+    function root(element) {
+        return element.parentNode ? root(element.parentNode) : element;
+    }
+
+    function select(selector, element) {
+        return document.querySelector(selector) || root(element).querySelector(selector);
+    }
+
+    function anchorUpdate($new, $old, getControl, element) {
+        $new = typeof $new === "string" ? select($new, element) : $new;
+        $old = typeof $old === "string" ? select($old, element) : $old;
         if ($old && $old._anchorClick) {
             $old.removeEventListener("click", $old._anchorClick);
             $old._anchorClick = null;
@@ -373,7 +381,7 @@
             scope: scopeSpec,
             link: function ($scope, elements, attrs, listView) {
                 var layout;
-                var options = createOptions($scope, scopeSpecKeys, function () { return layout; });
+                var options = createOptions($scope, scopeSpecKeys, function () { return layout; }, elements[0]);
                 preLink.forEach(function (f) { f($scope, options); });
                 layout = new ctor(options);
                 postLink.forEach(function (f) { f($scope, layout); });

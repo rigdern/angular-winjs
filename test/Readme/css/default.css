@@ -1,2 +1,28 @@
-﻿body {
+﻿#content-viewport {
+    height: 100%;
+    padding-left: 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+#content {
+    padding-right: 20px;
+}
+
+PRE {
+    background-color: darkgray;
+}
+
+.running-code-example {
+    background-color: steelblue;
+    padding: 10px;
+}
+
+.win-listview .win-listlayout .win-container {
+    height: 200px;
+}
+
+.win-listview .win-gridlayout .win-container {
+    height: 200px;
+    width: 200px;
 }

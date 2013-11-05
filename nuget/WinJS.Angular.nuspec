@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>WinJS.Angular</id>
+        <version>1.0.0-pre</version>
+        <title>Angular-WinJS</title>
+        <authors>Josh Williams</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Project to smooth the AngularJS/WinJS interaction, this code is a shim layer which facilitates usage of WinJS UI controls in an Angular Windows application.</description>
+        <summary>Project to smooth the AngularJS/WinJS interaction, this code is a shim layer which facilitates usage of WinJS UI controls in an Angular Windows application.</summary>
+        <tags>angular angularjs winjs winrt windows8 jquery</tags>
+        <dependencies>
+            <dependency id="jQuery" version="2.0.3" />
+            <dependency id="AngularJS.Core" version="1.2.0-rc3" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\js\angular-winjs.js" target="content\Scripts\angular-winjs.js" />
+        <file src="..\readme.txt" target="" />
+    </files>
+</package>

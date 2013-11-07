@@ -18,6 +18,12 @@
         $scope.sum = function () {
             return ratings.reduce(function (t, v) { return t + (+v.rating); }, 0);
         };
+        $scope.addRating = function () {
+            ratings.unshift({
+                name: "Kieran",
+                rating: 1
+            });
+        };
     })
 
 })();

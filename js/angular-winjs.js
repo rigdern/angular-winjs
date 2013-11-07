@@ -69,13 +69,16 @@
             if (value) {
                 options[key] = (processors[key] || angular.identity)(value, null, getControl, element);
             }
+            var cleanupFunction;
             if ((processors[key] || angular.identity).watch) {
-                cleanup.push(processors[key].watch($scope, key, getValue));
-            } else {
-                cleanup.push($scope.$watch(key, function ($new, $old) {
-                    update(key, $new, $old);
-                }));
+                cleanupFunction = processors[key].watch($scope, key, getValue, options[key]);
             }
+            if (!cleanupFunction) {
+                cleanupFunction = $scope.$watch(key, function ($new, $old) {
+                    update(key, $new, $old);
+                });
+            }
+            cleanup.push(cleanupFunction);
             return options;
         }, {});
         return {
@@ -192,13 +195,22 @@
         }
     }
 
+    var WrapperList = WinJS.Class.derive(WinJS.Binding.List, function (array) {
+        WinJS.Binding.List.call(this, array);
+    });
+
     function bindingList($new, $old, getControl) {
         if ($new && Array.isArray($new)) {
-            $new = new WinJS.Binding.List($new);
+            $new = new WrapperList($new);
+            $new._proxy = true;
         }
         return $new;
     }
-    bindingList.watch = function ($scope, key, getValue) {
+    bindingList.watch = function ($scope, key, getValue, initialValue) {
+        if (!(initialValue instanceof WrapperList)) {
+            // use normal watch, not $watchCollection diffing.
+            return;
+        }
         return $scope.$watchCollection(key, function (array) {
             var list = getValue(key);
             if (!list) {
@@ -254,11 +266,11 @@
         $new = $new && $new.dataSource ? $new.dataSource : $new;
         return $new;
     }
-    dataSource.watch = function ($scope, key, getValue) {
+    dataSource.watch = function ($scope, key, getValue, initialValue) {
         return bindingList.watch($scope, key, function (key) {
             var value = getValue(key);
             return value ? value.list : null;
-        });
+        }, initialValue ? initialValue.list : null);
     };
 
     function controller(contentProperties) {

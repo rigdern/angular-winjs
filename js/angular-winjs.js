@@ -5,7 +5,7 @@
 
     module.run(function ($rootScope) {
         var Scope = Object.getPrototypeOf($rootScope);
-        var Scope$eval= Scope.$eval;
+        var Scope$eval = Scope.$eval;
         Scope.$eval = function (expr, locals) {
             var that = this;
             return MSApp.execUnsafeLocalFunction(function () {
@@ -55,21 +55,37 @@
 
     function createOptions(processors, $scope, keys, getControl, element) {
         processors = processors || {};
+        function getValue(key) {
+            return getControl()[key]
+        }
         function update(key, $new, $old) {
             if ($new !== $old) {
                 getControl()[key] = (processors[key] || angular.identity)($new, $old, getControl, element);
             }
         }
-        return keys.reduce(function (options, key) {
+        var cleanup = [];
+        var options = keys.reduce(function (options, key) {
             var value = $scope[key];
             if (value) {
                 options[key] = (processors[key] || angular.identity)(value, null, getControl, element);
             }
-            $scope.$watch(key, function ($new, $old) {
-                update(key, $new, $old);
-            });
+            if ((processors[key] || angular.identity).watch) {
+                cleanup.push(processors[key].watch($scope, key, getValue));
+            } else {
+                cleanup.push($scope.$watch(key, function ($new, $old) {
+                    update(key, $new, $old);
+                }));
+            }
             return options;
         }, {});
+        return {
+            options: options,
+            cleanup: function () {
+                cleanup.forEach(function (worker) {
+                    worker();
+                });
+            },
+        }
     }
 
     function controlDirectiveModel(ctor, createOptions, preLink, postLink, elementType, transclude) {
@@ -86,12 +102,16 @@
                 var element = elements[0];
                 var control;
                 var options = createOptions($scope, scopeSpecKeys, function () { return control; }, element);
-                preLink.forEach(function (f) { f($scope, options); });
-                control = new ctor(element, options);
+                preLink.forEach(function (f) { f($scope, options.options); });
+                control = new ctor(element, options.options);
                 postLink.forEach(function (f) { f($scope, control); });
+                var cleanup = options.cleanup;
                 $scope.$on("$destroy", function () {
                     if (control.dispose) {
                         control.dispose();
+                    }
+                    if (cleanup) {
+                        cleanup();
                     }
                 });
                 return control;
@@ -174,18 +194,72 @@
 
     function bindingList($new, $old, getControl) {
         if ($new && Array.isArray($new)) {
-            $new = new WinJS.Binding.List($new, { proxy: true });
+            $new = new WinJS.Binding.List($new);
         }
         return $new;
+    }
+    bindingList.watch = function ($scope, key, getValue) {
+        return $scope.$watchCollection(key, function (array) {
+            var list = getValue(key);
+            if (!list) {
+                return;
+            }
+            if (!array) {
+                list.length = 0;
+                return;
+            }
+            var targetIndicies = new Map();
+            for (var i = 0, len = array.length; i < len; i++) {
+                targetIndicies.set(array[i], i);
+            }
+            var arrayIndex = 0, listIndex = 0;
+            while (arrayIndex < array.length) {
+                var arrayData = array[arrayIndex];
+                if (listIndex >= list.length) {
+                    list.push(arrayData);
+                } else {
+                    while (listIndex < list.length) {
+                        var listData = list.getAt(listIndex);
+                        if (listData === arrayData) {
+                            listIndex++;
+                            arrayIndex++;
+                            break;
+                        } else {
+                            if (targetIndicies.has(listData)) {
+                                var targetIndex = targetIndicies.get(listData);
+                                if (targetIndex < arrayIndex) {
+                                    // already in list, remove the duplicate
+                                    list.splice(listIndex, 1);
+                                } else {
+                                    list.splice(listIndex, 0, arrayData);
+                                    arrayIndex++;
+                                    listIndex++;
+                                    break;
+                                }
+                            } else {
+                                // deleted, remove from list
+                                list.splice(listIndex, 1);
+                            }
+                        }
+                    }
+                }
+            }
+            // clip any items which are left over in the tail.
+            list.length = array.length;
+        });
     }
 
     function dataSource($new, $old, getControl) {
         $new = bindingList($new);
-        if ($new && $new.dataSource) {
-            $new = $new.dataSource;
-        }
+        $new = $new && $new.dataSource ? $new.dataSource : $new;
         return $new;
     }
+    dataSource.watch = function ($scope, key, getValue) {
+        return bindingList.watch($scope, key, function (key) {
+            var value = getValue(key);
+            return value ? value.list : null;
+        });
+    };
 
     function controller(contentProperties) {
         return function (model) {
@@ -382,10 +456,16 @@
             link: function ($scope, elements, attrs, listView) {
                 var layout;
                 var options = createOptions($scope, scopeSpecKeys, function () { return layout; }, elements[0]);
-                preLink.forEach(function (f) { f($scope, options); });
-                layout = new ctor(options);
+                preLink.forEach(function (f) { f($scope, options.options); });
+                layout = new ctor(options.options);
                 postLink.forEach(function (f) { f($scope, layout); });
                 listView.layout = layout;
+                var cleanup = options.cleanup;
+                $scope.$on("$destroy", function () {
+                    if (cleanup) {
+                        cleanup();
+                    }
+                });
                 return layout;
             }
         }
@@ -408,3 +488,4 @@
     //WinJS.UI.Repeater;
 
 }(this));
+

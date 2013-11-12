@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
         <id>WinJS.Angular</id>
-        <version>1.0.0-pre</version>
+        <version>1.0.0</version>
         <title>Angular-WinJS</title>
         <authors>Josh Williams</authors>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -11,7 +11,7 @@
         <tags>angular angularjs winjs winrt windows8 jquery</tags>
         <dependencies>
             <dependency id="jQuery" version="2.0.3" />
-            <dependency id="AngularJS.Core" version="1.2.0-rc3" />
+            <dependency id="AngularJS.Core" version="1.2.0" />
         </dependencies>
     </metadata>
     <files>

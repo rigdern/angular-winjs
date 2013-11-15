@@ -7,7 +7,7 @@ Project to smooth the AngularJS/WinJS interaction, this code is a shim layer whi
         <win-item-template>Hi: {{item.data.rating}}</win-item-template>
     </win-list-view>
 
-How to use this in your angular project?
+How to use this in your Angular project?
 ----------------------------------------
 
 Just make sure to include WinJS 2.0, and then include the shim.

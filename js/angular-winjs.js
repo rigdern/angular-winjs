@@ -1,3 +1,9 @@
+/*!
+ * angular-winjs
+ *
+ * Copyright 2013 Josh Williams and other contributors
+ * Released under the MIT license
+ */
 (function (global) {
     "use strict;"
 
@@ -73,11 +79,9 @@
             if ((processors[key] || angular.identity).watch) {
                 cleanupFunction = processors[key].watch($scope, key, getValue, options[key]);
             }
-            if (!cleanupFunction) {
-                cleanupFunction = $scope.$watch(key, function ($new, $old) {
-                    update(key, $new, $old);
-                });
-            }
+            cleanupFunction = cleanupFunction || $scope.$watch(key, function ($new, $old) {
+                update(key, $new, $old);
+            });
             cleanup.push(cleanupFunction);
             return options;
         }, {});

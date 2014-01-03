@@ -11,7 +11,7 @@
         <tags>angular angularjs winjs winrt windows8 jquery</tags>
         <dependencies>
             <dependency id="jQuery" version="2.0.3" />
-            <dependency id="AngularJS.Core" version="1.2.0" />
+            <dependency id="AngularJS.Core" version="1.2.6" />
         </dependencies>
     </metadata>
     <files>

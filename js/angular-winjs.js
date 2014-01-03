@@ -15,7 +15,7 @@
         Scope.$eval = function (expr, locals) {
             var that = this;
             return MSApp.execUnsafeLocalFunction(function () {
-                return Scope$eval.call(this, expr, locals);
+                return Scope$eval.call(that, expr, locals);
             });
         };
     })

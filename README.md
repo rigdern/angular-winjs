@@ -73,7 +73,8 @@ Examples of control usage
 
 ### ListView
 
-    <win-list-view item-data-source="ratings">
+    <div>Selected count: {{selection.length}}, indexes: {{selection.toString()}}</div>
+    <win-list-view item-data-source="ratings" selection="selection">
         <win-item-template>This list view item's rating is: {{item.data.rating}}</win-item-template>
         <win-list-layout></win-list-layout>
     </win-list-view>

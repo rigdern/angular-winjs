@@ -59,6 +59,7 @@
     app.controller("AppController", function ($scope, $compile) {
         $scope.path = "ms-appx:///readme.md";
 
+        $scope.selection = [];
         $scope.ratings = [1, 2, 3, 4].map(function (r) { return { rating: r }; });
         $scope.date = new Date();
         $scope.time = new Date();

@@ -20,7 +20,8 @@
 </head>
 <body>
     <win-search-box onquerysubmitted="submitted($event)" 
-                    onsuggestionsrequested="suggestions($event)">
+                    onsuggestionsrequested="suggestions($event)"
+                    focus-on-keyboard-input="true">
     </win-search-box>
     <div class="selected-count">Selected: {{selection.length}}</div>
     <win-list-view item-data-source="data" selection="selection">

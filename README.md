@@ -17,7 +17,7 @@ Just make sure to include WinJS 2.0, and then include the shim.
     <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
     <script src="/js/angular-winjs.js"></script>
 
-__Note: this shim library only works against Angular 1.1+, I've been testing it using 1.2.0-rc3.__
+__Note: this shim library only works against Angular 1.1+, I've been testing it using 1.2.6.__
 
 Examples of control usage
 -------------------------

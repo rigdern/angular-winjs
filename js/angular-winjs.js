@@ -15,7 +15,7 @@
         Scope.$eval = function (expr, locals) {
             var that = this;
             return MSApp.execUnsafeLocalFunction(function () {
-                return Scope$eval.call(this, expr, locals);
+                return Scope$eval.call(that, expr, locals);
             });
         };
     })
@@ -59,10 +59,12 @@
         return api;
     }
 
-    function createOptions(processors, $scope, keys, getControl, element) {
+    function createOptions(processors, $scope, scopeSpec, getControl, element) {
         processors = processors || {};
+        var keys = Object.keys(scopeSpec);
         function getValue(key) {
-            return getControl()[key]
+            var control = getControl();
+            return control ? control[key] : null;
         }
         function update(key, $new, $old) {
             if ($new !== $old) {
@@ -71,13 +73,36 @@
         }
         var cleanup = [];
         var options = keys.reduce(function (options, key) {
+            var processor = processors[key] || angular.identity;
+            var watch = processor.watch;
             var value = $scope[key];
             if (value) {
-                options[key] = (processors[key] || angular.identity)(value, null, getControl, element);
+                value = processor(value, null, getControl, element);
+                if (value) {
+                    // Handle control events, bind in $event and allow them to make synchronous callbacks during
+                    // control construction (which will be during a angular application).
+                    if (scopeSpec[key] === "&") {
+                        var target = value;
+                        value = function (event) {
+                            switch ($scope.$root.$$phase) {
+                                case "$apply":
+                                case "$digest":
+                                    target({ $event: event });
+                                    break;
+                                default:
+                                    $scope.$apply(function () {
+                                        target({ $event: event });
+                                    });
+                                    break;
+                            }
+                        }
+                    }
+                    options[key] = value;
+                }
             }
             var cleanupFunction;
-            if ((processors[key] || angular.identity).watch) {
-                cleanupFunction = processors[key].watch($scope, key, getValue, options[key]);
+            if (watch) {
+                cleanupFunction = watch($scope, key, getValue, options[key]);
             }
             cleanupFunction = cleanupFunction || $scope.$watch(key, function ($new, $old) {
                 update(key, $new, $old);
@@ -97,7 +122,6 @@
 
     function controlDirectiveModel(ctor, createOptions, preLink, postLink, elementType, transclude) {
         var scopeSpec = getBindableApi(ctor);
-        var scopeSpecKeys = Object.keys(scopeSpec);
         var template = getTemplate(elementType, transclude);
         return {
             restrict: "E", // @TODO, consider AE
@@ -108,7 +132,7 @@
             link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var control;
-                var options = createOptions($scope, scopeSpecKeys, function () { return control; }, element);
+                var options = createOptions($scope, scopeSpec, function () { return control; }, element);
                 preLink.forEach(function (f) { f($scope, options.options); });
                 control = new ctor(element, options.options);
                 postLink.forEach(function (f) { f($scope, control); });
@@ -168,6 +192,21 @@
         return eventAction(eventName, function ($scope, control) {
             $scope[property] = control[property];
         });
+    }
+
+    function eventSelectionSet(eventName, property) {
+        return function ($scope, control) {
+            control.addEventListener(eventName, function () {
+                var value = $scope[property];
+                if (value) {
+                    var current = control.selection.getIndices();
+                    value.length = 0;
+                    current.forEach(function (item) {
+                        value.push(item);
+                    });
+                }
+            });
+        }
     }
 
     function root(element) {
@@ -277,6 +316,18 @@
         }, initialValue ? initialValue.list : null);
     };
 
+    function selection($new, $old, getControl) {
+        return $new;
+    }
+    selection.watch = function ($scope, key, getValue, initialValue) {
+        $scope.$watchCollection(key, function (selection) {
+            var value = getValue(key);
+            if (value) {
+                value.set(selection);
+            }
+        })
+    }
+
     function controller(contentProperties) {
         return function (model) {
             contentProperties.forEach(function (property) {
@@ -335,12 +386,13 @@
             transclude: true,
         },
         "WinJS.UI.ListView": {
-            // @TODO, can we get things like selection bound?
-            model: [controller(["itemTemplate", "groupHeaderTemplate", "layout"])],
+            model: [controller(["itemTemplate", "groupHeaderTemplate", "layout", "selection"])],
             optionsProcessors: {
                 itemDataSource: dataSource,
                 groupDataSource: dataSource,
+                selection: selection,
             },
+            postLink: [eventSelectionSet("selectionchanged", "selection")],
             transclude: true,
         },
         "WinJS.UI.Menu": {
@@ -461,7 +513,6 @@
 
     function layoutDirectiveModel(ctor, createOptions, preLink, postLink) {
         var scopeSpec = getBindableApi(ctor);
-        var scopeSpecKeys = Object.keys(scopeSpec);
         return {
             require: "^winListView",
             restrict: "E",
@@ -471,7 +522,7 @@
             scope: scopeSpec,
             link: function ($scope, elements, attrs, listView) {
                 var layout;
-                var options = createOptions($scope, scopeSpecKeys, function () { return layout; }, elements[0]);
+                var options = createOptions($scope, scopeSpec, function () { return layout; }, elements[0]);
                 preLink.forEach(function (f) { f($scope, options.options); });
                 layout = new ctor(options.options);
                 postLink.forEach(function (f) { f($scope, layout); });

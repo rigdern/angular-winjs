@@ -1,0 +1,33 @@
+﻿body {
+    display: -ms-grid;
+    -ms-grid-columns: 1fr;
+    -ms-grid-rows: auto auto 1fr;
+}
+
+.win-searchbox {
+    -ms-grid-row: 1;
+    -ms-grid-column-align: center;
+    width: 100%;
+}
+
+.selected-count {
+    -ms-grid-row: 2;
+    font-size: 30px;
+}
+
+.win-listview {
+    -ms-grid-row: 3;
+    height: 100%;
+}
+
+    .win-listview .win-container {
+        margin: 10px;
+    }
+
+    .win-listview .win-item {
+        padding: 10px;
+    }
+
+    .win-listview .win-selected {
+        background-color: navy;
+    }

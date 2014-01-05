@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="app" ng-controller="SearchBoxController">
+<head>
+    <meta charset="utf-8" />
+    <title>SearchBoxTest</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- dependencies -->
+    <script src="/js/lib/jquery.js"></script>
+    <script src="/js/lib/angular.js"></script>
+    <script src="/js/lib/angular-winjs.js"></script>
+
+    <!-- SearchBoxTest references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+</head>
+<body>
+    <win-search-box onquerysubmitted="submitted($event)" 
+                    onsuggestionsrequested="suggestions($event)"
+                    focus-on-keyboard-input="true">
+    </win-search-box>
+    <div class="selected-count">Selected: {{selection.length}}</div>
+    <win-list-view item-data-source="data" selection="selection">
+        <win-item-template>{{item.data}}</win-item-template>
+        <win-list-layout></win-list-layout>
+    </win-list-view>
+</body>
+</html>

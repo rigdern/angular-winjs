@@ -112,6 +112,13 @@
         return value;
     }
 
+    function proxy($scope, controller, name) {
+        Object.defineProperty(controller, name, {
+            get: function () { return $scope[name]; },
+            set: function (value) { $scope[name] = value; }
+        });
+    }
+
     function BINDING_anchor($scope, key, element, getControl, bindings) {
         bindings.push($scope.$watch(key, function (newValue, oldValue) {
             newValue = typeof newValue === "string" ? select(newValue, element) : newValue;
@@ -422,10 +429,7 @@
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
             controller: function ($scope) {
-                Object.defineProperty(this, "itemTemplate", {
-                    get: function () { return $scope["itemTemplate"]; },
-                    set: function (value) { $scope["itemTemplate"] = value; }
-                });
+                proxy($scope, this, "itemTemplate");
             },
             link: function ($scope, elements) {
                 var element = elements[0];
@@ -527,10 +531,7 @@
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
             controller: function ($scope) {
-                Object.defineProperty(this, "headerTemplate", {
-                    get: function () { return $scope["headerTemplate"]; },
-                    set: function (value) { $scope["headerTemplate"] = value; }
-                });
+                proxy($scope, this, "headerTemplate");
             },
             link: function ($scope, elements) {
                 var element = elements[0];
@@ -679,22 +680,10 @@
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
             controller: function ($scope) {
-                Object.defineProperty(this, "itemTemplate", {
-                    get: function () { return $scope["itemTemplate"]; },
-                    set: function (value) { $scope["itemTemplate"] = value; }
-                });
-                Object.defineProperty(this, "groupHeaderTemplate", {
-                    get: function () { return $scope["groupHeaderTemplate"]; },
-                    set: function (value) { $scope["groupHeaderTemplate"] = value; }
-                });
-                Object.defineProperty(this, "layout", {
-                    get: function () { return $scope["layout"]; },
-                    set: function (value) { $scope["layout"] = value; }
-                });
-                Object.defineProperty(this, "selection", {
-                    get: function () { return $scope["selection"]; },
-                    set: function (value) { $scope["selection"] = value; }
-                });
+                proxy($scope, this, "itemTemplate");
+                proxy($scope, this, "groupHeaderTemplate");
+                proxy($scope, this, "layout");
+                proxy($scope, this, "selection");
             },
             link: function ($scope, elements) {
                 var element = elements[0];
@@ -842,10 +831,7 @@
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
             controller: function ($scope) {
-                Object.defineProperty(this, "template", {
-                    get: function () { return $scope["template"]; },
-                    set: function (value) { $scope["template"] = value; }
-                });
+                proxy($scope, this, "template");
             },
             link: function ($scope, elements) {
                 var element = elements[0];
@@ -1049,10 +1035,7 @@
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
             controller: function ($scope) {
-                Object.defineProperty(this, "contentElement", {
-                    get: function () { return $scope["contentElement"]; },
-                    set: function (value) { $scope["contentElement"] = value; }
-                });
+                proxy($scope, this, "contentElement");
             },
             link: function ($scope, elements) {
                 var element = elements[0];

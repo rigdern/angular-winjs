@@ -114,7 +114,7 @@
             return item[item.indexOf('–') + 1];
         }
 
-        $scope.list = new WinJS.Binding.List($scope.data).createGrouped(group, group);
+        $scope.list = new WinJS.Binding.List($scope.data);//.createGrouped(group, group);
 
         // The selection for the ListView is an array of indexes or keys
         $scope.selection = [];

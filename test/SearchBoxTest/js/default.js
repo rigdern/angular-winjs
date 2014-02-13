@@ -110,6 +110,12 @@
             "If you can dream it, you can achieve it. –Zig Ziglar",
         ];
 
+        function group(item) {
+            return item[item.indexOf('–') + 1];
+        }
+
+        $scope.list = new WinJS.Binding.List($scope.data);//.createGrouped(group, group);
+
         // The selection for the ListView is an array of indexes or keys
         $scope.selection = [];
 

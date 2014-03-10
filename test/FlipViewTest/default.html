@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="app" ng-controller="AppController">
+<head>
+    <meta charset="utf-8" />
+    <title>AngularWinJSTest</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- dependencies -->
+    <script src="/js/lib/jquery.js"></script>
+    <script src="/js/lib/angular.js"></script>
+    <script src="/js/lib/angular-winjs.js"></script>
+
+    <!-- AngularWinJSTest references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+</head>
+<body>
+    <win-flip-view id="projectsContainer" item-data-source="projects.projects.project">
+        <win-item-template id="projectWinitemTemplate">
+            <div id="projectWinitemDataTemplate">
+                <div id="projectContainer">
+                    <div id="projectFieldContainer">
+                        <div id="projectLabel"><b>Project name:</b></div>
+                        <div id="projectField">{{item.data.name}}</div><br />
+                    </div>
+                    <div id="projectFieldContainer">
+                        <div id="projectLabel"><b>Icon:</b></div>
+                        <div id="projectField"><img ng-src="{{item.data['icon'].__text}}" /></div><br />
+                    </div>
+                    <div id="projectFieldContainer">
+                        <div id="projectLabel"><b>Status:</b></div>
+                        <div id="projectField">{{item.data.status}}</div><br />
+                    </div>
+                    <div id="projectFieldContainer">
+                        <div id="projectLabel"><b>Total tickets:</b></div>
+                        <div id="projectField">{{item.data["total-tickets"].__text}}</div><br />
+                    </div>
+                    <div id="projectFieldContainer">
+                        <div id="projectLabel"><b>Open tickets:</b></div>
+                        <div id="projectField">{{item.data["open-tickets"].__text}}</div><br />
+                    </div>
+                    <div id="projectFieldContainer">
+                        <div id="projectLabel"><b>Closed tickets:</b></div>
+                        <div id="projectField">{{item.data["closed-tickets"].__text}}</div><br />
+                    </div>
+                </div>
+            </div>
+        </win-item-template>
+    </win-flip-view>
+</body>
+</html>

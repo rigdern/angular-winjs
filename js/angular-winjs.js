@@ -57,7 +57,7 @@
         }
     }
 
-    function list($scope, key, getList, bindings) {
+    function list($scope, key, getControl, getList, bindings) {
         var initialBindings = bindings.length;
         var value = $scope[key];
         if (value) {
@@ -119,7 +119,7 @@
         if (bindings.length === initialBindings) {
             bindings.push($scope.$watch(key, function (newValue, oldValue) {
                 if (newValue !== oldValue) {
-                    getControl()[key] = newValue;
+                    getControl()[key] = list($scope, key, getControl, getList, bindings);
                 }
             }));
         }
@@ -162,7 +162,7 @@
                 }
             }
         };
-        return list($scope, key, getList, bindings);
+        return list($scope, key, getControl, getList, bindings);
     }
     BINDING_dataSource.binding = "=?";
 
@@ -207,7 +207,7 @@
                 return control[key];
             }
         }
-        return list($scope, key, getList, bindings);
+        return list($scope, key, getControl, getList, bindings);
     }
     BINDING_list.binding = "=?";
 

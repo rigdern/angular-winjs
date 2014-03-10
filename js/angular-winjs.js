@@ -43,7 +43,21 @@
         });
     }
 
-    function list($scope, key, getList, bindings) {
+    function apply($scope, f) {
+        switch ($scope.$root.$$phase) {
+            case "$apply":
+            case "$digest":
+                f();
+                break;
+            default:
+                $scope.$apply(function () {
+                    f();
+                });
+                break;
+        }
+    }
+
+    function list($scope, key, getControl, getList, bindings) {
         var initialBindings = bindings.length;
         var value = $scope[key];
         if (value) {
@@ -105,7 +119,7 @@
         if (bindings.length === initialBindings) {
             bindings.push($scope.$watch(key, function (newValue, oldValue) {
                 if (newValue !== oldValue) {
-                    getControl()[key] = newValue;
+                    getControl()[key] = list($scope, key, getControl, getList, bindings);
                 }
             }));
         }
@@ -148,7 +162,7 @@
                 }
             }
         };
-        return list($scope, key, getList, bindings);
+        return list($scope, key, getControl, getList, bindings);
     }
     BINDING_dataSource.binding = "=?";
 
@@ -160,17 +174,7 @@
         }))
         var value = $scope[key];
         return function (event) {
-            switch ($scope.$root.$$phase) {
-                case "$apply":
-                case "$digest":
-                    value({ $event: event });
-                    break;
-                default:
-                    $scope.$apply(function () {
-                        value({ $event: event });
-                    });
-                    break;
-            }
+            apply($scope, function () { value({ $event: event }); });
         };
     }
     BINDING_event.binding = "&";
@@ -178,7 +182,7 @@
     function BINDING_property($scope, key, element, getControl, bindings) {
         bindings.push($scope.$watch(key, function (newValue, oldValue) {
             if (newValue !== oldValue) {
-                getControl()[key] = newValue;
+                (getControl() || {})[key] = newValue;
             }
         }));
         return $scope[key];
@@ -187,7 +191,7 @@
 
     function BINDING_selection($scope, key, element, getControl, bindings) {
         bindings.push($scope.$watchCollection(key, function (selection) {
-            var value = getControl()[key];
+            var value = (getControl() || {})[key];
             if (value) {
                 value.set(selection);
             }
@@ -203,7 +207,7 @@
                 return control[key];
             }
         }
-        return list($scope, key, getList, bindings);
+        return list($scope, key, getControl, getList, bindings);
     }
     BINDING_list.binding = "=?";
 
@@ -400,7 +404,7 @@
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return datePicker; }, bindings); });
                 datePicker = new WinJS.UI.DatePicker(element, options);
                 datePicker.addEventListener("change", function () {
-                    $scope.$apply(function () {
+                    apply($scope, function () {
                         $scope["current"] = datePicker["current"];
                     });
                 });
@@ -540,7 +544,7 @@
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return hub; }, bindings); });
                 hub = new WinJS.UI.Hub(element, options);
                 hub.addEventListener("loadingstatechanged", function () {
-                    $scope.$apply(function () {
+                    apply($scope, function () {
                         $scope["loadingState"] = hub["loadingState"];
                     });
                 });
@@ -597,7 +601,7 @@
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return itemContainer; }, bindings); });
                 itemContainer = new WinJS.UI.ItemContainer(element, options);
                 itemContainer.addEventListener("selectionchanged", function () {
-                    $scope.$apply(function () {
+                    apply($scope, function () {
                         $scope["selected"] = itemContainer["selected"];
                     });
                 });
@@ -694,7 +698,7 @@
                 listView.addEventListener("selectionchanged", function () {
                     var value = $scope["selection"];
                     if (value) {
-                        $scope.$apply(function () {
+                        apply($scope, function () {
                             var current = listView.selection.getIndices();
                             value.length = 0;
                             current.forEach(function (item) {
@@ -869,7 +873,7 @@
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return rating; }, bindings); });
                 rating = new WinJS.UI.Rating(element, options);
                 rating.addEventListener("change", function () {
-                    $scope.$apply(function () {
+                    apply($scope, function () {
                         $scope["userRating"] = rating["userRating"];
                     });
                 });
@@ -906,7 +910,7 @@
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return searchBox; }, bindings); });
                 searchBox = new WinJS.UI.SearchBox(element, options);
                 searchBox.addEventListener("querychanged", function () {
-                    $scope.$apply(function () {
+                    apply($scope, function () {
                         $scope["queryText"] = searchBox["queryText"];
                     });
                 });
@@ -975,7 +979,7 @@
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return timePicker; }, bindings); });
                 timePicker = new WinJS.UI.TimePicker(element, options);
                 timePicker.addEventListener("change", function () {
-                    $scope.$apply(function () {
+                    apply($scope, function () {
                         $scope["current"] = timePicker["current"];
                     });
                 });
@@ -1006,7 +1010,7 @@
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return toggle; }, bindings); });
                 toggle = new WinJS.UI.ToggleSwitch(element, options);
                 toggle.addEventListener("change", function () {
-                    $scope.$apply(function () {
+                    apply($scope, function () {
                         $scope["checked"] = toggle["checked"];
                     });
                 });

@@ -23,7 +23,7 @@
                     onsuggestionsrequested="suggestions($event)"
                     focus-on-keyboard-input="true">
     </win-search-box>
-    <div class="selected-count">Selected: {{selection.length}}</div>
+    <div class="selected-count">Selected: {{selection.length}}, selected indices: {{selection.join()}}</div>
     <win-list-view item-data-source="list" group-data-source="list.groups" selection="selection">
         <win-item-template>{{item.data}}</win-item-template>
         <win-list-layout></win-list-layout>

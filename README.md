@@ -132,8 +132,9 @@ Examples of control usage
 
 ### ToggleSwitch
     
+    <win-toggle-switch checked="toggleDisabled" label-on="'Other Switch Disabled'" label-off="'Other Switch Enabled'"></win-toggle-switch>
     The state is: {{toggleState}}<br/>
-    <win-toggle-switch checked="toggleState"></win-toggle-switch>
+	<win-toggle-switch checked="toggleState" disabled="toggleDisabled"></win-toggle-switch>
 
 ### Tooltip
 

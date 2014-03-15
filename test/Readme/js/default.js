@@ -64,6 +64,7 @@
         $scope.date = new Date();
         $scope.time = new Date();
         $scope.toggleState = false;
+        $scope.toggleDisabled = false;
         $scope.searchText = "Some text";
         $scope.data = new WinJS.Binding.List([1, 2, 3, 4, 5]).createGrouped(
             function (item) { return item % 2 ? "even" : "odd"; },

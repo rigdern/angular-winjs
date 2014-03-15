@@ -286,6 +286,7 @@
             transclude: true,
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("disabled");
                 var bindings = [];
                 var appbar;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return appbar; }, bindings); });
@@ -321,6 +322,8 @@
             transclude: true,
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("disabled");
+                element.removeAttribute("id");
                 var bindings = [];
                 var command;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return command; }, bindings); });
@@ -399,6 +402,7 @@
             template: "<DIV></DIV>",
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("disabled");
                 var bindings = [];
                 var datePicker;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return datePicker; }, bindings); });
@@ -766,6 +770,8 @@
             template: "<BUTTON></BUTTON>",
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("disabled");
+                element.removeAttribute("id");
                 var bindings = [];
                 var command;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return command; }, bindings); });
@@ -868,6 +874,7 @@
             template: "<DIV></DIV>",
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("disabled");
                 var bindings = [];
                 var rating;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return rating; }, bindings); });
@@ -905,6 +912,7 @@
             template: "<DIV></DIV>",
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("disabled");
                 var bindings = [];
                 var searchBox;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return searchBox; }, bindings); });
@@ -974,6 +982,7 @@
             template: "<DIV></DIV>",
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("disabled");
                 var bindings = [];
                 var timePicker;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return timePicker; }, bindings); });
@@ -1005,6 +1014,9 @@
             template: "<DIV></DIV>",
             link: function ($scope, elements) {
                 var element = elements[0];
+                element.removeAttribute("checked");
+                element.removeAttribute("disabled");
+                element.removeAttribute("title");
                 var bindings = [];
                 var toggle;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return toggle; }, bindings); });

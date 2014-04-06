@@ -267,6 +267,7 @@
     //
     module.directive("winAppBar", function () {
         var api = {
+            closedDisplayMode: BINDING_property,
             commands: BINDING_property,
             disabled: BINDING_property,
             hidden: BINDING_property,
@@ -521,7 +522,7 @@
     module.directive("winHub", function () {
         var api = {
             headerTemplate: BINDING_property,
-            indexOfFirstVisible: BINDING_dataSource,
+            indexOfFirstVisible: BINDING_property,
             indexOfLastVisible: BINDING_property,
             loadingState: BINDING_property,
             orientation: BINDING_property,
@@ -851,6 +852,57 @@
                 container = new WinJS.UI.NavBarContainer(element, options)
                 addDestroyListener($scope, container, bindings);
                 return container;
+            },
+        };
+    });
+
+    module.directive("winPivot", function () {
+        var api = {
+            items: BINDING_list,
+            locked: BINDING_property,
+            selectedIndex: BINDING_property,
+            selectedItem: BINDING_property,
+            title: BINDING_property,
+            onitemanimationend: BINDING_event,
+            onitemanimationstart: BINDING_event,
+            onselectionchanged: BINDING_event,
+        };
+        return {
+            restrict: "E",
+            replace: true,
+            scope: objectMap(api, function (value) { return value.binding; }),
+            template: "<DIV ng-transclude='true'></DIV>",
+            transclude: true,
+            link: function ($scope, elements) {
+                var element = elements[0];
+                var bindings = [];
+                var pivot;
+                var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return pivot; }, bindings); });
+                pivot = new WinJS.UI.Pivot(element, options);
+                addDestroyListener($scope, pivot, bindings);
+                return hub;
+            },
+        };
+    });
+
+    module.directive("winPivotItem", function () {
+        var api = {
+            header: BINDING_property,
+        };
+        return {
+            restrict: "E",
+            replace: true,
+            scope: objectMap(api, function (value) { return value.binding; }),
+            template: "<DIV ng-transclude='true'></DIV>",
+            transclude: true,
+            link: function ($scope, elements) {
+                var element = elements[0];
+                var bindings = [];
+                var item;
+                var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return item; }, bindings); });
+                item = new WinJS.UI.PivotItem(element, options)
+                addDestroyListener($scope, item, bindings);
+                return item;
             },
         };
     });

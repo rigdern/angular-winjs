@@ -98,6 +98,20 @@ Examples of control usage
         </win-nav-bar-container>
     </win-nav-bar>
 
+### Pivot and PivotItem (only supported on WinJS 2.1 for Phone today)
+
+    <win-pivot>
+        <win-pivot-item header="'First'">
+          Pivots are useful for varied content
+        </win-pivot-item>
+        <win-pivot-item header="'Second'">
+          This Pivot  is boring however, it just has things like data bindings: {{ratings.length}}
+        </win-pivot-item>
+        <win-pivot-item header="'Tail...'">
+          Because it's only purpose is to show how to create a Pivot
+        </win-pivot-item>
+    </win-pivot>
+
 ### Rating
 
     The current rating is: {{ratings[0].rating}}.<br/>

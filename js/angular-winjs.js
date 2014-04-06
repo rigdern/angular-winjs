@@ -57,6 +57,10 @@
         }
     }
 
+    function exists(control) {
+        return !!Object.getOwnPropertyDescriptor(WinJS.UI, control);
+    }
+
     function list($scope, key, getControl, getList, bindings) {
         var initialBindings = bindings.length;
         var value = $scope[key];
@@ -265,7 +269,7 @@
 
     // Directives
     //
-    module.directive("winAppBar", function () {
+    exists("AppBar") && module.directive("winAppBar", function () {
         var api = {
             closedDisplayMode: BINDING_property,
             commands: BINDING_property,
@@ -298,7 +302,7 @@
         };
     });
 
-    module.directive("winAppBarCommand", function () {
+    exists("AppBar") && module.directive("winAppBarCommand", function () {
         var api = {
             disabled: BINDING_property,
             extraClass: BINDING_property,
@@ -335,7 +339,7 @@
         };
     });
 
-    module.directive("winBackButton", function () {
+    exists("BackButton") && module.directive("winBackButton", function () {
         return {
             restrict: "E",
             replace: true,
@@ -349,7 +353,7 @@
         };
     });
 
-    module.directive("winCellSpanningLayout", function () {
+    exists("CellSpanningLayout") && module.directive("winCellSpanningLayout", function () {
         var api = {
             groupHeaderPosition: BINDING_property,
             groupInfo: BINDING_property,
@@ -374,7 +378,7 @@
         };
     });
 
-    module.directive("winCommandTemplate", function () {
+    exists("NavBarContainer") && module.directive("winCommandTemplate", function () {
         return {
             require: ["^?winNavBarContainer"],
             restrict: "E",
@@ -384,7 +388,7 @@
         };
     });
 
-    module.directive("winDatePicker", function () {
+    exists("DatePicker") && module.directive("winDatePicker", function () {
         var api = {
             calendar: BINDING_property,
             current: BINDING_property,
@@ -419,7 +423,7 @@
         };
     });
 
-    module.directive("winFlipView", function () {
+    exists("FlipView") && module.directive("winFlipView", function () {
         var api = {
             currentPage: BINDING_property,
             itemDataSource: BINDING_dataSource,
@@ -452,7 +456,7 @@
         };
     });
 
-    module.directive("winFlyout", function () {
+    exists("Flyout") && module.directive("winFlyout", function () {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -486,7 +490,7 @@
         };
     });
 
-    module.directive("winGridLayout", function () {
+    exists("GridLayout") && module.directive("winGridLayout", function () {
         var api = {
             groupHeaderPosition: BINDING_property,
             maximumRowsOrColumns: BINDING_property,
@@ -509,7 +513,7 @@
         };
     });
 
-    module.directive("winGroupHeaderTemplate", function () {
+    exists("ListView") && module.directive("winGroupHeaderTemplate", function () {
         return {
             require: ["^?winListView"],
             restrict: "E",
@@ -519,7 +523,7 @@
         };
     });
 
-    module.directive("winHub", function () {
+    exists("Hub") && module.directive("winHub", function () {
         var api = {
             headerTemplate: BINDING_property,
             indexOfFirstVisible: BINDING_property,
@@ -559,7 +563,7 @@
         };
     });
 
-    module.directive("winHubSection", function () {
+    exists("HubSection") && module.directive("winHubSection", function () {
         var api = {
             header: BINDING_property,
             isHeaderStatic: BINDING_property,
@@ -582,7 +586,7 @@
         };
     });
 
-    module.directive("winItemContainer", function () {
+    exists("ItemContainer") && module.directive("winItemContainer", function () {
         var api = {
             draggable: BINDING_property,
             selected: BINDING_dataSource,
@@ -616,7 +620,7 @@
         };
     });
 
-    module.directive("winItemTemplate", function () {
+    (exists("ListView") || exists("FlipView")) && module.directive("winItemTemplate", function () {
         return {
             require: ["^?winListView", "^?winFlipView"],
             restrict: "E",
@@ -626,7 +630,7 @@
         };
     });
 
-    module.directive("winListLayout", function () {
+    exists("ListLayout") && module.directive("winListLayout", function () {
         var api = {
             groupHeaderPosition: BINDING_property,
             orientation: BINDING_property,
@@ -648,7 +652,7 @@
         };
     });
 
-    module.directive("winListView", function () {
+    exists("ListView") && module.directive("winListView", function () {
         var api = {
             currentItem: BINDING_property,
             groupDataSource: BINDING_dataSource,
@@ -718,7 +722,7 @@
         };
     });
 
-    module.directive("winMenu", function () {
+    exists("Menu") && module.directive("winMenu", function () {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -751,7 +755,7 @@
         };
     });
 
-    module.directive("winMenuCommand", function () {
+    exists("MenuCommand") && module.directive("winMenuCommand", function () {
         var api = {
             disabled: BINDING_property,
             extraClass: BINDING_property,
@@ -783,7 +787,7 @@
         };
     });
 
-    module.directive("winNavBar", function () {
+    exists("NavBar") && module.directive("winNavBar", function () {
         return {
             restrict: "E",
             replace: true,
@@ -798,7 +802,7 @@
         };
     });
 
-    module.directive("winNavBarCommand", function () {
+    exists("NavBarCommand") && module.directive("winNavBarCommand", function () {
         var api = {
             icon: BINDING_property,
             label: BINDING_property,
@@ -825,7 +829,7 @@
         };
     });
 
-    module.directive("winNavBarContainer", function () {
+    exists("NavBarContainer") && module.directive("winNavBarContainer", function () {
         var api = {
             data: BINDING_list,
             fixedSize: BINDING_property,
@@ -856,7 +860,7 @@
         };
     });
 
-    module.directive("winPivot", function () {
+    exists("Pivot") && module.directive("winPivot", function () {
         var api = {
             items: BINDING_list,
             locked: BINDING_property,
@@ -885,7 +889,7 @@
         };
     });
 
-    module.directive("winPivotItem", function () {
+    exists("PivotItem") && module.directive("winPivotItem", function () {
         var api = {
             header: BINDING_property,
         };
@@ -907,7 +911,7 @@
         };
     });
 
-    module.directive("winRating", function () {
+    exists("Rating") && module.directive("winRating", function () {
         var api = {
             averageRating: BINDING_property,
             disabled: BINDING_property,
@@ -942,7 +946,7 @@
         };
     });
 
-    module.directive("winSearchBox", function () {
+    exists("SearchBox") && module.directive("winSearchBox", function () {
         var api = {
             chooseSuggestionOnEnter: BINDING_property,
             disabled: BINDING_property,
@@ -980,7 +984,7 @@
         };
     });
 
-    module.directive("winSectionHeaderTemplate", function () {
+    exists("SectionHeaderTemplate") && module.directive("winSectionHeaderTemplate", function () {
         return {
             require: ["^?winHub"],
             restrict: "E",
@@ -990,7 +994,7 @@
         };
     });
 
-    module.directive("winSemanticZoom", function () {
+    exists("SemanticZoom") && module.directive("winSemanticZoom", function () {
         var api = {
             enableButton: BINDING_property,
             locked: BINDING_property,
@@ -1016,7 +1020,7 @@
         };
     });
 
-    module.directive("winTimePicker", function () {
+    exists("TimePicker") && module.directive("winTimePicker", function () {
         var api = {
             clock: BINDING_property,
             current: BINDING_property,
@@ -1050,7 +1054,7 @@
         };
     });
 
-    module.directive("winToggleSwitch", function () {
+    exists("ToggleSwitch") && module.directive("winToggleSwitch", function () {
         var api = {
             checked: BINDING_property,
             disabled: BINDING_property,
@@ -1084,7 +1088,7 @@
         };
     });
 
-    module.directive("winTooltip", function () {
+    exists("Tooltip") && module.directive("winTooltip", function () {
         var api = {
             contentElement: BINDING_property,
             extraClass: BINDING_property,
@@ -1120,7 +1124,7 @@
     // Tooltop is a little odd because you have to be able to specify both the element
     // which has a tooltip (the content) and the tooltip's content itself. We specify
     // a special directive <win-tooltip-content /> which represents the latter.
-    module.directive("winTooltipContent", function () {
+    exists("Tooltip") && module.directive("winTooltipContent", function () {
         return {
             require: "^winTooltip",
             restrict: "E",

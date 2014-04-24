@@ -5,7 +5,7 @@
 * Released under the MIT license
 */
 (function (global) {
-    "use strict;"
+    "use strict";
 
     // Pure utility
     //
@@ -165,7 +165,7 @@
                     return list.list;
                 }
             }
-        };
+        }
         return list($scope, key, getControl, getList, bindings);
     }
     BINDING_dataSource.binding = "=?";
@@ -175,7 +175,7 @@
             if (newValue !== oldValue) {
                 getControl()[key] = newValue;
             }
-        }))
+        }));
         var value = $scope[key];
         return function (event) {
             apply($scope, function () { value({ $event: event }); });
@@ -265,7 +265,7 @@
                 return Scope$eval.call(that, expr, locals);
             });
         };
-    })
+    });
 
     // Directives
     //
@@ -281,7 +281,7 @@
             onafterhide: BINDING_event,
             onaftershow: BINDING_event,
             onbeforehide: BINDING_event,
-            onbeforeshow: BINDING_event,
+            onbeforeshow: BINDING_event
         };
         return {
             restrict: "E",
@@ -295,10 +295,10 @@
                 var bindings = [];
                 var appbar;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return appbar; }, bindings); });
-                appbar = new WinJS.UI.AppBar(element, options)
+                appbar = new WinJS.UI.AppBar(element, options);
                 addDestroyListener($scope, appbar, bindings);
                 return appbar;
-            },
+            }
         };
     });
 
@@ -317,7 +317,7 @@
             selected: BINDING_property,
             tooltip: BINDING_property,
             type: BINDING_property,
-            onclick: BINDING_event,
+            onclick: BINDING_event
         };
         return {
             restrict: "E",
@@ -332,10 +332,10 @@
                 var bindings = [];
                 var command;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return command; }, bindings); });
-                command = new WinJS.UI.AppBarCommand(element, options)
+                command = new WinJS.UI.AppBarCommand(element, options);
                 addDestroyListener($scope, command, bindings);
                 return command;
-            },
+            }
         };
     });
 
@@ -359,7 +359,7 @@
             groupInfo: BINDING_property,
             itemInfo: BINDING_property,
             maximumRowsOrColumns: BINDING_property,
-            orientation: BINDING_property,
+            orientation: BINDING_property
         };
         return {
             require: "^winListView",
@@ -374,7 +374,7 @@
                 layout = listView.layout = new WinJS.UI.CellSpanningLayout(options);
                 addDestroyListener($scope, layout, bindings);
                 return layout;
-            },
+            }
         };
     });
 
@@ -384,7 +384,7 @@
             restrict: "E",
             replace: true,
             transclude: true,
-            compile: compileTemplate("template"),
+            compile: compileTemplate("template")
         };
     });
 
@@ -398,7 +398,7 @@
             minYear: BINDING_property,
             monthPattern: BINDING_property,
             yearPattern: BINDING_property,
-            onchange: BINDING_event,
+            onchange: BINDING_event
         };
         return {
             restrict: "E",
@@ -419,7 +419,7 @@
                 });
                 addDestroyListener($scope, datePicker, bindings);
                 return datePicker;
-            },
+            }
         };
     });
 
@@ -433,7 +433,7 @@
             ondatasourcecountchanged: BINDING_event,
             onpagecompleted: BINDING_event,
             onpageselected: BINDING_event,
-            onpagevisibilitychanged: BINDING_event,
+            onpagevisibilitychanged: BINDING_event
         };
         return {
             restrict: "E",
@@ -452,7 +452,7 @@
                 flipView = new WinJS.UI.FlipView(element, options);
                 addDestroyListener($scope, flipView, bindings);
                 return flipView;
-            },
+            }
         };
     });
 
@@ -465,7 +465,7 @@
             onafterhide: BINDING_event,
             onaftershow: BINDING_event,
             onbeforehide: BINDING_event,
-            onbeforeshow: BINDING_event,
+            onbeforeshow: BINDING_event
         };
         return {
             restrict: "E",
@@ -486,7 +486,7 @@
                 }
                 addDestroyListener($scope, flyout, bindings);
                 return flyout;
-            },
+            }
         };
     });
 
@@ -494,7 +494,7 @@
         var api = {
             groupHeaderPosition: BINDING_property,
             maximumRowsOrColumns: BINDING_property,
-            orientation: BINDING_property,
+            orientation: BINDING_property
         };
         return {
             require: "^winListView",
@@ -509,7 +509,7 @@
                 layout = listView.layout = new WinJS.UI.GridLayout(options);
                 addDestroyListener($scope, layout, bindings);
                 return layout;
-            },
+            }
         };
     });
 
@@ -519,7 +519,7 @@
             restrict: "E",
             replace: true,
             transclude: true,
-            compile: compileTemplate("groupHeaderTemplate"),
+            compile: compileTemplate("groupHeaderTemplate")
         };
     });
 
@@ -535,7 +535,7 @@
             sections: BINDING_list,
             oncontentanimating: BINDING_event,
             onheaderinvoked: BINDING_event,
-            onloadingstatechanged: BINDING_event,
+            onloadingstatechanged: BINDING_event
         };
         return {
             restrict: "E",
@@ -559,14 +559,14 @@
                 });
                 addDestroyListener($scope, hub, bindings);
                 return hub;
-            },
+            }
         };
     });
 
     exists("HubSection") && module.directive("winHubSection", function () {
         var api = {
             header: BINDING_property,
-            isHeaderStatic: BINDING_property,
+            isHeaderStatic: BINDING_property
         };
         return {
             restrict: "E",
@@ -579,10 +579,10 @@
                 var bindings = [];
                 var section;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return section; }, bindings); });
-                section = new WinJS.UI.HubSection(element, options)
+                section = new WinJS.UI.HubSection(element, options);
                 addDestroyListener($scope, section, bindings);
                 return section;
-            },
+            }
         };
     });
 
@@ -595,7 +595,7 @@
             tapBehavior: BINDING_property,
             oninvoked: BINDING_event,
             onselectionchanged: BINDING_event,
-            onselectionchanging: BINDING_event,
+            onselectionchanging: BINDING_event
         };
         return {
             restrict: "E",
@@ -616,7 +616,7 @@
                 });
                 addDestroyListener($scope, itemContainer, bindings);
                 return itemContainer;
-            },
+            }
         };
     });
 
@@ -626,14 +626,14 @@
             restrict: "E",
             replace: true,
             transclude: true,
-            compile: compileTemplate("itemTemplate"),
+            compile: compileTemplate("itemTemplate")
         };
     });
 
     exists("ListLayout") && module.directive("winListLayout", function () {
         var api = {
             groupHeaderPosition: BINDING_property,
-            orientation: BINDING_property,
+            orientation: BINDING_property
         };
         return {
             require: "^winListView",
@@ -648,7 +648,7 @@
                 layout = listView.layout = new WinJS.UI.ListLayout(options);
                 addDestroyListener($scope, layout, bindings);
                 return layout;
-            },
+            }
         };
     });
 
@@ -684,7 +684,7 @@
             onkeyboardnavigating: BINDING_event,
             onloadingstatechanged: BINDING_event,
             onselectionchanged: BINDING_event,
-            onselectionchanging: BINDING_event,
+            onselectionchanging: BINDING_event
         };
         return {
             restrict: "E",
@@ -718,7 +718,7 @@
                 });
                 addDestroyListener($scope, listView, bindings);
                 return listView;
-            },
+            }
         };
     });
 
@@ -730,7 +730,7 @@
             onafterhide: BINDING_event,
             onaftershow: BINDING_event,
             onbeforehide: BINDING_event,
-            onbeforeshow: BINDING_event,
+            onbeforeshow: BINDING_event
         };
         return {
             restrict: "E",
@@ -751,7 +751,7 @@
                 }
                 addDestroyListener($scope, menu, bindings);
                 return menu;
-            },
+            }
         };
     });
 
@@ -766,7 +766,7 @@
             section: BINDING_property,
             selected: BINDING_property,
             type: BINDING_property,
-            onclick: BINDING_event,
+            onclick: BINDING_event
         };
         return {
             restrict: "E",
@@ -780,10 +780,10 @@
                 var bindings = [];
                 var command;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return command; }, bindings); });
-                command = new WinJS.UI.MenuCommand(element, options)
+                command = new WinJS.UI.MenuCommand(element, options);
                 addDestroyListener($scope, command, bindings);
                 return command;
-            },
+            }
         };
     });
 
@@ -798,7 +798,7 @@
                 var navbar = new WinJS.UI.NavBar(element);
                 addDestroyListener($scope, navbar, []);
                 return navbar;
-            },
+            }
         };
     });
 
@@ -809,7 +809,7 @@
             location: BINDING_property,
             splitButton: BINDING_property,
             state: BINDING_property,
-            tooltip: BINDING_property,
+            tooltip: BINDING_property
         };
         return {
             restrict: "E",
@@ -822,10 +822,10 @@
                 var bindings = [];
                 var command;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return command; }, bindings); });
-                command = new WinJS.UI.NavBarCommand(element, options)
+                command = new WinJS.UI.NavBarCommand(element, options);
                 addDestroyListener($scope, command, bindings);
                 return command;
-            },
+            }
         };
     });
 
@@ -837,7 +837,7 @@
             template: BINDING_property,
             maxRows: BINDING_property,
             oninvoked: BINDING_event,
-            onsplittoggle: BINDING_event,
+            onsplittoggle: BINDING_event
         };
         return {
             restrict: "E",
@@ -853,10 +853,10 @@
                 var bindings = [];
                 var container;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return container; }, bindings); });
-                container = new WinJS.UI.NavBarContainer(element, options)
+                container = new WinJS.UI.NavBarContainer(element, options);
                 addDestroyListener($scope, container, bindings);
                 return container;
-            },
+            }
         };
     });
 
@@ -869,7 +869,7 @@
             title: BINDING_property,
             onitemanimationend: BINDING_event,
             onitemanimationstart: BINDING_event,
-            onselectionchanged: BINDING_event,
+            onselectionchanged: BINDING_event
         };
         return {
             restrict: "E",
@@ -885,13 +885,13 @@
                 pivot = new WinJS.UI.Pivot(element, options);
                 addDestroyListener($scope, pivot, bindings);
                 return hub;
-            },
+            }
         };
     });
 
     exists("PivotItem") && module.directive("winPivotItem", function () {
         var api = {
-            header: BINDING_property,
+            header: BINDING_property
         };
         return {
             restrict: "E",
@@ -904,10 +904,10 @@
                 var bindings = [];
                 var item;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return item; }, bindings); });
-                item = new WinJS.UI.PivotItem(element, options)
+                item = new WinJS.UI.PivotItem(element, options);
                 addDestroyListener($scope, item, bindings);
                 return item;
-            },
+            }
         };
     });
 
@@ -921,7 +921,7 @@
             userRating: BINDING_property,
             oncancel: BINDING_event,
             onchange: BINDING_event,
-            onpreviewchange: BINDING_event,
+            onpreviewchange: BINDING_event
         };
         return {
             restrict: "E",
@@ -942,7 +942,7 @@
                 });
                 addDestroyListener($scope, rating, bindings);
                 return rating;
-            },
+            }
         };
     });
 
@@ -959,7 +959,7 @@
             onquerysubmitted: BINDING_event,
             onreceivingfocusonkeyboardinput: BINDING_event,
             onresultsuggestionchosen: BINDING_event,
-            onsuggestionsrequested: BINDING_event,
+            onsuggestionsrequested: BINDING_event
         };
         return {
             restrict: "E",
@@ -980,7 +980,7 @@
                 });
                 addDestroyListener($scope, searchBox, bindings);
                 return searchBox;
-            },
+            }
         };
     });
 
@@ -990,7 +990,7 @@
             restrict: "E",
             replace: true,
             transclude: true,
-            compile: compileTemplate("headerTemplate"),
+            compile: compileTemplate("headerTemplate")
         };
     });
 
@@ -1000,7 +1000,7 @@
             locked: BINDING_property,
             zoomedOut: BINDING_property,
             zoomFactor: BINDING_property,
-            onzoomchanged: BINDING_event,
+            onzoomchanged: BINDING_event
         };
         return {
             restrict: "E",
@@ -1013,10 +1013,10 @@
                 var bindings = [];
                 var sezo;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return sezo; }, bindings); });
-                sezo = new WinJS.UI.SemanticZoom(element, options)
+                sezo = new WinJS.UI.SemanticZoom(element, options);
                 addDestroyListener($scope, sezo, bindings);
                 return sezo;
-            },
+            }
         };
     });
 
@@ -1029,7 +1029,7 @@
             minuteIncrement: BINDING_property,
             minutePattern: BINDING_property,
             periodPattern: BINDING_property,
-            onchange: BINDING_event,
+            onchange: BINDING_event
         };
         return {
             restrict: "E",
@@ -1050,7 +1050,7 @@
                 });
                 addDestroyListener($scope, timePicker, bindings);
                 return timePicker;
-            },
+            }
         };
     });
 
@@ -1061,7 +1061,7 @@
             labelOff: BINDING_property,
             labelOn: BINDING_property,
             title: BINDING_property,
-            onchange: BINDING_event,
+            onchange: BINDING_event
         };
         return {
             restrict: "E",
@@ -1084,7 +1084,7 @@
                 });
                 addDestroyListener($scope, toggle, bindings);
                 return toggle;
-            },
+            }
         };
     });
 
@@ -1098,7 +1098,7 @@
             onbeforeclose: BINDING_event,
             onbeforeopen: BINDING_event,
             onclosed: BINDING_event,
-            onopened: BINDING_event,
+            onopened: BINDING_event
         };
         return {
             restrict: "E",
@@ -1114,10 +1114,10 @@
                 var bindings = [];
                 var tooltip;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return tooltip; }, bindings); });
-                tooltip = new WinJS.UI.Tooltip(element, options)
+                tooltip = new WinJS.UI.Tooltip(element, options);
                 addDestroyListener($scope, tooltip, bindings);
                 return tooltip;
-            },
+            }
         };
     });
 
@@ -1136,7 +1136,7 @@
 </div>",
             link: function ($scope, elements, attrs, tooltip) {
                 tooltip.contentElement = elements[0].firstElementChild;
-            },
+            }
         };
     });
 

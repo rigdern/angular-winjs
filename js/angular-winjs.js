@@ -261,9 +261,13 @@
         var Scope$eval = Scope.$eval;
         Scope.$eval = function (expr, locals) {
             var that = this;
-            return MSApp.execUnsafeLocalFunction(function () {
+            if (window.MSApp) {
+                return MSApp.execUnsafeLocalFunction(function () {
+                    return Scope$eval.call(that, expr, locals);
+                });
+            } else {
                 return Scope$eval.call(that, expr, locals);
-            });
+            }
         };
     });
 

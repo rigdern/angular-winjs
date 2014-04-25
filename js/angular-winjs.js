@@ -7,6 +7,15 @@
 (function (global) {
     "use strict";
 
+    // setImmediate is not implemented in all browsers, if it doesn't exist instead use setTimeout(_, 0)
+    //
+    var setImmediate = window.setImmediate;
+    if (!setImmediate) {
+        setImmediate = function (f) {
+            return setTimeout(f, 0);
+        };
+    }
+
     // Map is used in the list binding code, on browsers with Map support we simply use the built in
     // primitive, for list elements which are extensible we instead map from the list elements to their
     // current index (note that we must do the full mapping on every diff in order to ensure we don't

@@ -7,6 +7,42 @@
 (function (global) {
     "use strict";
 
+    // Map is used in the list binding code, on browsers with Map support we simply use the built in
+    // primitive, for list elements which are extensible we instead map from the list elements to their
+    // current index (note that we must do the full mapping on every diff in order to ensure we don't
+    // see stale indicies), and for non-extensible objects we fall back to using an array with O(N)
+    // lookup behavior on get.
+    //
+    var Map = window.Map;
+    if (true || !Map) {
+        // A simple value -> integer map
+        Map = function () {
+            this._nonExtensibleBacking = [];
+        };
+        Map.key = "$$$$mapkey";
+        Map.prototype.has = function (key) {
+            if (Object.isExtensible(key)) {
+                return Map.key in key;
+            } else {
+                return this._nonExtensibleBacking.indexOf(key) !== -1;
+            }
+        };
+        Map.prototype.get = function (key) {
+            if (Object.isExtensible(key)) {
+                return key[Map.key];
+            } else {
+                return this._nonExtensibleBacking.indexOf(key);
+            }
+        };
+        Map.prototype.set = function (key, value) {
+            if (Object.isExtensible(key)) {
+                key[Map.key] = value;
+            } else {
+                this._nonExtensibleBacking[value] = key;
+            }
+        };
+    }
+
     // Pure utility
     //
     function objectMap(obj, mapping) {

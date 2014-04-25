@@ -14,7 +14,7 @@
     // lookup behavior on get.
     //
     var Map = window.Map;
-    if (true || !Map) {
+    if (!Map) {
         // A simple value -> integer map
         Map = function () {
             this._nonExtensibleBacking = [];

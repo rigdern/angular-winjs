@@ -301,6 +301,21 @@
     //
     var module = angular.module("winjs", []);
 
+    module.config(function ($compileProvider) {
+        switch (document.location.protocol.toLowerCase()) {
+            // http://msdn.microsoft.com/en-us/library/windows/apps/xaml/jj655406.aspx
+            //
+            case "ms-appx:":
+            case "ms-appx-web:":
+                // Whitelist the Windows Runtime URL schemes so Angular does not flag as 'unsafe'.
+                //
+                var whitelist = /^\s*(https|ms-appx|ms-appx-web|ms-appdata):/i;
+                $compileProvider.imgSrcSanitizationWhitelist(whitelist);
+                $compileProvider.aHrefSanitizationWhitelist(whitelist);
+                break;
+        }
+    });
+
     module.run(function ($rootScope) {
         var Scope = Object.getPrototypeOf($rootScope);
         var Scope$eval = Scope.$eval;

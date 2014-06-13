@@ -53,7 +53,7 @@ Examples of control usage
 ### Hub and HubSection
 
     <win-hub>
-        <win-hub-section header="'First section'">
+        <win-hub-section header="'First section'" is-header-static="true">
           Hubs are useful for varied content
         </win-hub-section>
         <win-hub-section header="'The second section'">

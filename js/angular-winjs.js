@@ -78,8 +78,10 @@
 
     // Directive utilities
     //
-    function addDestroyListener($scope, control, bindings) {
+    function addDestroyListener($scope, control, bindings, destroyed) {
         $scope.$on("$destroy", function () {
+            (destroyed || angular.identity)();
+
             bindings.forEach(function (w) { w(); });
 
             if (control.dispose) {
@@ -605,17 +607,49 @@
             restrict: "E",
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
-            template: "<DIV ng-transclude='true'></DIV>",
+            template: "<DIV><DIV class='placeholder-holder' style='display:none;' ng-transclude='true'></DIV></DIV>",
             transclude: true,
             controller: function ($scope) {
+                // The children will (may) call back before the Hub is constructed so we queue up the calls to
+                //  addSection and removeSection and execute them later.
+                $scope.deferredCalls = [];
+                function deferred(wrapped) {
+                    return function () {
+                        var f = Function.prototype.apply.bind(wrapped, null, arguments);
+                        if ($scope.deferredCalls) {
+                            $scope.deferredCalls.push(f);
+                        } else {
+                            f();
+                        }
+                    }
+                }
                 proxy($scope, this, "headerTemplate");
+                this.addSection = deferred(function (section, index) {
+                    $scope.addSection(section, index);
+                });
+                this.removeSection = deferred(function (section) {
+                    $scope.removeSection(section);
+                });
             },
             link: function ($scope, elements) {
                 var element = elements[0];
+                // NOTE: the Hub will complain if this is in the DOM when it is constructed so we temporarially remove it.
+                //       It must be in the DOM when repeaters run and hosted under the hub.
+                var sectionsHost = element.firstElementChild;
+                sectionsHost.parentNode.removeChild(sectionsHost);
                 var bindings = [];
                 var hub;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return hub; }, bindings); });
                 hub = new WinJS.UI.Hub(element, options);
+                element.appendChild(sectionsHost);
+                $scope.addSection = function (section, index) {
+                    hub.sections.splice(index, 0, section);
+                };
+                $scope.removeSection = function (section) {
+                    hub.sections.splice(hub.sections.indexOf(section), 1);
+                };
+                $scope.deferredCalls.forEach(function (f) { f(); });
+                $scope.deferredCalls = null;
                 hub.addEventListener("loadingstatechanged", function () {
                     apply($scope, function () {
                         $scope["loadingState"] = hub["loadingState"];
@@ -634,17 +668,27 @@
         };
         return {
             restrict: "E",
+            require: "^winHub",
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
-            template: "<DIV ng-transclude='true'></DIV>",
+            // NOTE: there is an arbitrary wrapper here .placeholder which is used in scenarios where developers stamp
+            //       out hub sections using ng-repeat. In order to support things like that we need to infer the order
+            //       that the sections are in relative to static sections so we manage them in a .placeholder-holder
+            //       element (see winHub directive above), the placeholder always lives in that thing. The content
+            //       (meaning the real hub section) ends up being owned by the Hub.
+            template: "<DIV class='placeholder'><DIV ng-transclude='true'></DIV></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
-                var element = elements[0];
+            link: function ($scope, elements, attrs, hub) {
+                var placeholder = elements[0];
+                var element = placeholder.firstElementChild;
                 var bindings = [];
                 var section;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return section; }, bindings); });
                 section = new WinJS.UI.HubSection(element, options);
-                addDestroyListener($scope, section, bindings);
+                hub.addSection(section, Array.prototype.indexOf.call(placeholder.parentNode.children, placeholder));
+                addDestroyListener($scope, section, bindings, function () {
+                    hub.removeSection(section);
+                });
                 return section;
             }
         };
@@ -939,16 +983,50 @@
             restrict: "E",
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
-            template: "<DIV ng-transclude='true'></DIV>",
+            template: "<DIV><DIV class='placeholder-holder' style='display:none;' ng-transclude='true'></DIV></DIV>",
             transclude: true,
+            controller: function ($scope) {
+                // The children will (may) call back before the Pivot is constructed so we queue up the calls to
+                //  addItem and removeItem and execute them later.
+                $scope.deferredCalls = [];
+                function deferred(wrapped) {
+                    return function () {
+                        var f = Function.prototype.apply.bind(wrapped, null, arguments);
+                        if ($scope.deferredCalls) {
+                            $scope.deferredCalls.push(f);
+                        } else {
+                            f();
+                        }
+                    }
+                }
+                this.addItem = deferred(function (item, index) {
+                    $scope.addItem(item, index);
+                });
+                this.removeItem = deferred(function (item) {
+                    $scope.removeItem(item);
+                });
+            },
             link: function ($scope, elements) {
                 var element = elements[0];
+                // NOTE: the Pivot will complain if this is in the DOM when it is constructed so we temporarially remove it.
+                //       It must be in the DOM when repeaters run and hosted under the pivot.
+                var itemsHost = element.firstElementChild;
+                itemsHost.parentNode.removeChild(itemsHost);
                 var bindings = [];
                 var pivot;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return pivot; }, bindings); });
                 pivot = new WinJS.UI.Pivot(element, options);
+                element.appendChild(itemsHost);
+                $scope.addItem = function (item, index) {
+                    pivot.items.splice(index, 0, item);
+                };
+                $scope.removeItem = function (item) {
+                    pivot.items.splice(pivot.items.indexOf(item), 1);
+                };
+                $scope.deferredCalls.forEach(function (f) { f(); });
+                $scope.deferredCalls = null;
                 addDestroyListener($scope, pivot, bindings);
-                return hub;
+                return pivot;
             }
         };
     });
@@ -959,17 +1037,27 @@
         };
         return {
             restrict: "E",
+            require: "^winPivot",
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
-            template: "<DIV ng-transclude='true'></DIV>",
+            // NOTE: there is an arbitrary wrapper here .placeholder which is used in scenarios where developers stamp
+            //       out pivot sections using ng-repeat. In order to support things like that we need to infer the order
+            //       that the sections are in relative to static sections so we manage them in a .placeholder-holder
+            //       element (see winPivot directive above), the placeholder always lives in that thing. The content
+            //       (meaning the real pivot section) ends up being owned by the Hub.
+            template: "<DIV class='placeholder'><DIV ng-transclude='true'></DIV></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
-                var element = elements[0];
+            link: function ($scope, elements, attrs, pivot) {
+                var placeholder = elements[0];
+                var element = placeholder.firstElementChild;
                 var bindings = [];
                 var item;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return item; }, bindings); });
                 item = new WinJS.UI.PivotItem(element, options);
-                addDestroyListener($scope, item, bindings);
+                pivot.addItem(item, Array.prototype.indexOf.call(placeholder.parentNode.children, placeholder));
+                addDestroyListener($scope, item, bindings, function () {
+                    pivot.removeItem(item);
+                });
                 return item;
             }
         };

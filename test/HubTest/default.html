@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" id="ng-app" ng-app="app" ng-controller="AppController">
+<head>
+    <meta charset="utf-8" />
+    <title>AngularWinJSTest</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- dependencies -->
+    <script src="/js/lib/jquery.js"></script>
+    <script src="/js/lib/angular.js"></script>
+    <script src="/js/lib/angular-winjs.js"></script>
+
+    <!-- AngularWinJSTest references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+</head>
+<body>
+    <win-hub>
+        <win-hub-section header="'hello'">First</win-hub-section>
+        <win-hub-section header="'another'">Second</win-hub-section>
+        <win-hub-section header="section.header" is-header-static="$index % 2 === 0" ng-repeat="section in sections track by section.id">
+            {{section.content}}, index: {{$index + 2}}
+        </win-hub-section>
+        <win-hub-section header="'middle'">Middle</win-hub-section>
+        <win-hub-section header="section.header" ng-repeat="section in sections track by section.id">
+            {{section.content}}, index: {{$index + 2}}
+        </win-hub-section>
+        <win-hub-section header="section.header" ng-repeat="section in sections2">
+            {{section.content}}, index: {{$index + 2}}
+        </win-hub-section>
+        <win-hub-section header="'last'">Last</win-hub-section>
+    </win-hub>
+</body>
+</html>

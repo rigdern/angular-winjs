@@ -489,7 +489,7 @@
         };
     });
 
-    exists("FlipView") && module.directive("winFlipView", function () {
+    exists("FlipView") && module.directive("winFlipView", function ($parse) {
         var api = {
             currentPage: BINDING_property,
             itemDataSource: BINDING_dataSource,
@@ -510,19 +510,22 @@
             controller: function ($scope) {
                 proxy($scope, this, "itemTemplate");
             },
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var flipView;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return flipView; }, bindings); });
                 flipView = new WinJS.UI.FlipView(element, options);
+                if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, flipView);
+                }
                 addDestroyListener($scope, flipView, bindings);
                 return flipView;
             }
         };
     });
 
-    exists("Flyout") && module.directive("winFlyout", function () {
+    exists("Flyout") && module.directive("winFlyout", function ($parse) {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -539,12 +542,15 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var flyout;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return flyout; }, bindings); });
                 flyout = new WinJS.UI.Flyout(element, options);
+                if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, flyout);
+                }
                 var anchor = flyout.anchor;
                 if (anchor && anchor instanceof HTMLElement && !anchor._anchorClick) {
                     anchor._anchorClick = function () { flyout.show(); };
@@ -760,7 +766,7 @@
         };
     });
 
-    exists("ListView") && module.directive("winListView", function () {
+    exists("ListView") && module.directive("winListView", function ($parse) {
         var api = {
             currentItem: BINDING_property,
             groupDataSource: BINDING_dataSource,
@@ -806,7 +812,7 @@
                 proxy($scope, this, "layout");
                 proxy($scope, this, "selection");
             },
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var listView;
@@ -824,13 +830,16 @@
                         });
                     }
                 });
+                 if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, listView);
+                }
                 addDestroyListener($scope, listView, bindings);
                 return listView;
             }
         };
     });
 
-    exists("Menu") && module.directive("winMenu", function () {
+    exists("Menu") && module.directive("winMenu", function ($parse) {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -846,12 +855,15 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var menu;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return menu; }, bindings); });
                 menu = new WinJS.UI.Menu(element, options);
+                if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, menu);
+                }
                 var anchor = menu.anchor;
                 if (anchor && anchor instanceof HTMLElement && anchor._anchorClick) {
                     anchor._anchorClick = function () { menu.show(); };
@@ -895,15 +907,18 @@
         };
     });
 
-    exists("NavBar") && module.directive("winNavBar", function () {
+    exists("NavBar") && module.directive("winNavBar", function ($parse) {
         return {
             restrict: "E",
             replace: true,
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var navbar = new WinJS.UI.NavBar(element);
+                if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, navbar);
+                }
                 addDestroyListener($scope, navbar, []);
                 return navbar;
             }
@@ -1098,7 +1113,7 @@
         };
     });
 
-    exists("SearchBox") && module.directive("winSearchBox", function () {
+    exists("SearchBox") && module.directive("winSearchBox", function ($parse) {
         var api = {
             chooseSuggestionOnEnter: BINDING_property,
             disabled: BINDING_property,
@@ -1118,7 +1133,7 @@
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV></DIV>",
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 element.removeAttribute("disabled");
                 var bindings = [];
@@ -1130,6 +1145,9 @@
                         $scope["queryText"] = searchBox["queryText"];
                     });
                 });
+                if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, searchBox);
+                }
                 addDestroyListener($scope, searchBox, bindings);
                 return searchBox;
             }
@@ -1240,7 +1258,7 @@
         };
     });
 
-    exists("Tooltip") && module.directive("winTooltip", function () {
+    exists("Tooltip") && module.directive("winTooltip", function ($parse) {
         var api = {
             contentElement: BINDING_property,
             extraClass: BINDING_property,
@@ -1261,12 +1279,15 @@
             controller: function ($scope) {
                 proxy($scope, this, "contentElement");
             },
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var tooltip;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return tooltip; }, bindings); });
                 tooltip = new WinJS.UI.Tooltip(element, options);
+                 if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, tooltip);
+                }
                 addDestroyListener($scope, tooltip, bindings);
                 return tooltip;
             }

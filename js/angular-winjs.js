@@ -335,7 +335,7 @@
 
     // Directives
     //
-    exists("AppBar") && module.directive("winAppBar", function () {
+    exists("AppBar") && module.directive("winAppBar", function ($parse) {
         var api = {
             closedDisplayMode: BINDING_property,
             commands: BINDING_property,
@@ -355,13 +355,16 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 element.removeAttribute("disabled");
                 var bindings = [];
                 var appbar;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return appbar; }, bindings); });
                 appbar = new WinJS.UI.AppBar(element, options);
+                if(attrs.handle) {
+                	$parse(attrs.handle).assign($scope, appbar);
+                }
                 addDestroyListener($scope, appbar, bindings);
                 return appbar;
             }
@@ -1285,7 +1288,7 @@
                 var tooltip;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return tooltip; }, bindings); });
                 tooltip = new WinJS.UI.Tooltip(element, options);
-                 if(attrs.handle) {
+                if(attrs.handle) {
                 	$parse(attrs.handle).assign($scope, tooltip);
                 }
                 addDestroyListener($scope, tooltip, bindings);

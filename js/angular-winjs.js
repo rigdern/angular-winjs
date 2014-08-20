@@ -103,6 +103,15 @@
                 break;
         }
     }
+    
+    function applyShown(control, shown) {
+		if(shown === true) {
+			control.show();
+		}
+		else if (shown === false) {
+			control.hide();
+		}
+	}
 
     function exists(control) {
         return !!Object.getOwnPropertyDescriptor(WinJS.UI, control);
@@ -362,9 +371,19 @@
                 var appbar;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return appbar; }, bindings); });
                 appbar = new WinJS.UI.AppBar(element, options);
-                if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, appbar);
-                }
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(appbar, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(appbar, shownProp(scope));
+                	});
+                	appbar.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	appbar.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, appbar, bindings);
                 return appbar;
             }
@@ -519,9 +538,6 @@
                 var flipView;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return flipView; }, bindings); });
                 flipView = new WinJS.UI.FlipView(element, options);
-                if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, flipView);
-                }
                 addDestroyListener($scope, flipView, bindings);
                 return flipView;
             }
@@ -551,14 +567,24 @@
                 var flyout;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return flyout; }, bindings); });
                 flyout = new WinJS.UI.Flyout(element, options);
-                if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, flyout);
-                }
                 var anchor = flyout.anchor;
                 if (anchor && anchor instanceof HTMLElement && !anchor._anchorClick) {
                     anchor._anchorClick = function () { flyout.show(); };
                     anchor.addEventListener("click", anchor._anchorClick);
                 }
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(flyout, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(flyout, shownProp(scope));
+                	});
+                	flyout.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	flyout.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, flyout, bindings);
                 return flyout;
             }
@@ -833,9 +859,6 @@
                         });
                     }
                 });
-                 if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, listView);
-                }
                 addDestroyListener($scope, listView, bindings);
                 return listView;
             }
@@ -864,14 +887,24 @@
                 var menu;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return menu; }, bindings); });
                 menu = new WinJS.UI.Menu(element, options);
-                if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, menu);
-                }
                 var anchor = menu.anchor;
                 if (anchor && anchor instanceof HTMLElement && anchor._anchorClick) {
                     anchor._anchorClick = function () { menu.show(); };
                     anchor.addEventListener("click", anchor._anchorClick);
                 }
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(menu, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(menu, shownProp(scope));
+                	});
+                	menu.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	menu.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, menu, bindings);
                 return menu;
             }
@@ -909,7 +942,7 @@
             }
         };
     });
-
+	
     exists("NavBar") && module.directive("winNavBar", function ($parse) {
         return {
             restrict: "E",
@@ -919,9 +952,19 @@
             link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var navbar = new WinJS.UI.NavBar(element);
-                if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, navbar);
-                }
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(navbar, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(navbar, shownProp(scope));
+                	});
+                	navbar.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	navbar.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, navbar, []);
                 return navbar;
             }
@@ -1148,9 +1191,6 @@
                         $scope["queryText"] = searchBox["queryText"];
                     });
                 });
-                if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, searchBox);
-                }
                 addDestroyListener($scope, searchBox, bindings);
                 return searchBox;
             }
@@ -1288,9 +1328,6 @@
                 var tooltip;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return tooltip; }, bindings); });
                 tooltip = new WinJS.UI.Tooltip(element, options);
-                if(attrs.handle) {
-                	$parse(attrs.handle).assign($scope, tooltip);
-                }
                 addDestroyListener($scope, tooltip, bindings);
                 return tooltip;
             }

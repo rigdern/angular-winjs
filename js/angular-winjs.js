@@ -1359,5 +1359,20 @@
 
     // Do not support explicitly, use ng-repeat
     //WinJS.UI.Repeater;
-
+	
+	//surface winControl property as win-control directive
+	//keep priority set to a higher value than others (default is 0)
+	//as 'link' ie. postLink functions run highest priority last
+	module.directive("winControl", function ($parse) {
+        return {
+            restrict: "A",
+            priority: 1,
+            link: function ($scope, element, attrs) {
+                if (attrs.winControl) {
+                	$parse(attrs.winControl).assign($scope, element[0].winControl);
+                }
+            }
+        };
+    });
+	
 }(this));

@@ -103,6 +103,15 @@
                 break;
         }
     }
+    
+    function applyShown(control, shown) {
+		if(shown === true) {
+			control.show();
+		}
+		else if (shown === false) {
+			control.hide();
+		}
+	}
 
     function exists(control) {
         return !!Object.getOwnPropertyDescriptor(WinJS.UI, control);
@@ -335,7 +344,7 @@
 
     // Directives
     //
-    exists("AppBar") && module.directive("winAppBar", function () {
+    exists("AppBar") && module.directive("winAppBar", function ($parse) {
         var api = {
             closedDisplayMode: BINDING_property,
             commands: BINDING_property,
@@ -355,13 +364,26 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 element.removeAttribute("disabled");
                 var bindings = [];
                 var appbar;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return appbar; }, bindings); });
                 appbar = new WinJS.UI.AppBar(element, options);
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(appbar, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(appbar, shownProp(scope));
+                	});
+                	appbar.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	appbar.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, appbar, bindings);
                 return appbar;
             }
@@ -489,7 +511,7 @@
         };
     });
 
-    exists("FlipView") && module.directive("winFlipView", function () {
+    exists("FlipView") && module.directive("winFlipView", function ($parse) {
         var api = {
             currentPage: BINDING_property,
             itemDataSource: BINDING_dataSource,
@@ -510,7 +532,7 @@
             controller: function ($scope) {
                 proxy($scope, this, "itemTemplate");
             },
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var flipView;
@@ -522,7 +544,7 @@
         };
     });
 
-    exists("Flyout") && module.directive("winFlyout", function () {
+    exists("Flyout") && module.directive("winFlyout", function ($parse) {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -539,7 +561,7 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var flyout;
@@ -550,6 +572,19 @@
                     anchor._anchorClick = function () { flyout.show(); };
                     anchor.addEventListener("click", anchor._anchorClick);
                 }
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(flyout, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(flyout, shownProp(scope));
+                	});
+                	flyout.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	flyout.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, flyout, bindings);
                 return flyout;
             }
@@ -760,7 +795,7 @@
         };
     });
 
-    exists("ListView") && module.directive("winListView", function () {
+    exists("ListView") && module.directive("winListView", function ($parse) {
         var api = {
             currentItem: BINDING_property,
             groupDataSource: BINDING_dataSource,
@@ -806,7 +841,7 @@
                 proxy($scope, this, "layout");
                 proxy($scope, this, "selection");
             },
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var listView;
@@ -830,7 +865,7 @@
         };
     });
 
-    exists("Menu") && module.directive("winMenu", function () {
+    exists("Menu") && module.directive("winMenu", function ($parse) {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -846,7 +881,7 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var menu;
@@ -857,6 +892,19 @@
                     anchor._anchorClick = function () { menu.show(); };
                     anchor.addEventListener("click", anchor._anchorClick);
                 }
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(menu, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(menu, shownProp(scope));
+                	});
+                	menu.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	menu.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, menu, bindings);
                 return menu;
             }
@@ -894,16 +942,29 @@
             }
         };
     });
-
-    exists("NavBar") && module.directive("winNavBar", function () {
+	
+    exists("NavBar") && module.directive("winNavBar", function ($parse) {
         return {
             restrict: "E",
             replace: true,
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var navbar = new WinJS.UI.NavBar(element);
+                if(attrs.shown) {
+                	var shownProp = $parse(attrs.shown);
+                	applyShown(navbar, shownProp($scope));
+                	$scope.$watch(attrs.shown, function (newVal, oldVal, scope) {
+                		applyShown(navbar, shownProp(scope));
+                	});
+                	navbar.addEventListener("beforehide", function () {
+                		shownProp.assign($scope, false);
+                	});
+                	navbar.addEventListener("beforeshow", function () {
+                		shownProp.assign($scope, true);
+                	});
+   	            }
                 addDestroyListener($scope, navbar, []);
                 return navbar;
             }
@@ -1098,7 +1159,7 @@
         };
     });
 
-    exists("SearchBox") && module.directive("winSearchBox", function () {
+    exists("SearchBox") && module.directive("winSearchBox", function ($parse) {
         var api = {
             chooseSuggestionOnEnter: BINDING_property,
             disabled: BINDING_property,
@@ -1118,7 +1179,7 @@
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV></DIV>",
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 element.removeAttribute("disabled");
                 var bindings = [];
@@ -1240,7 +1301,7 @@
         };
     });
 
-    exists("Tooltip") && module.directive("winTooltip", function () {
+    exists("Tooltip") && module.directive("winTooltip", function ($parse) {
         var api = {
             contentElement: BINDING_property,
             extraClass: BINDING_property,
@@ -1261,7 +1322,7 @@
             controller: function ($scope) {
                 proxy($scope, this, "contentElement");
             },
-            link: function ($scope, elements) {
+            link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
                 var tooltip;
@@ -1298,5 +1359,20 @@
 
     // Do not support explicitly, use ng-repeat
     //WinJS.UI.Repeater;
-
+	
+	//surface winControl property as win-control directive
+	//keep priority set to a higher value than others (default is 0)
+	//as 'link' ie. postLink functions run highest priority last
+	module.directive("winControl", function ($parse) {
+        return {
+            restrict: "A",
+            priority: 1,
+            link: function ($scope, element, attrs) {
+                if (attrs.winControl) {
+                	$parse(attrs.winControl).assign($scope, element[0].winControl);
+                }
+            }
+        };
+    });
+	
 }(this));

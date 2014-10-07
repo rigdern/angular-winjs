@@ -312,7 +312,7 @@
     //
     var module = angular.module("winjs", []);
 
-    module.config(function ($compileProvider) {
+    module.config(['$compileProvider', function ($compileProvider) {
         switch (document.location.protocol.toLowerCase()) {
             // http://msdn.microsoft.com/en-us/library/windows/apps/xaml/jj655406.aspx
             //
@@ -325,9 +325,9 @@
                 $compileProvider.aHrefSanitizationWhitelist(whitelist);
                 break;
         }
-    });
+    }]);
 
-    module.run(function ($rootScope) {
+    module.run(['$rootScope', function ($rootScope) {
         var Scope = Object.getPrototypeOf($rootScope);
         var Scope$eval = Scope.$eval;
         Scope.$eval = function (expr, locals) {
@@ -340,11 +340,11 @@
                 return Scope$eval.call(that, expr, locals);
             }
         };
-    });
+    }]);
 
     // Directives
     //
-    exists("AppBar") && module.directive("winAppBar", function ($parse) {
+    exists("AppBar") && module.directive("winAppBar", ['$parse', function ($parse) {
         var api = {
             closedDisplayMode: BINDING_property,
             commands: BINDING_property,
@@ -388,7 +388,7 @@
                 return appbar;
             }
         };
-    });
+    }]);
 
     exists("AppBar") && module.directive("winAppBarCommand", function () {
         var api = {
@@ -511,7 +511,7 @@
         };
     });
 
-    exists("FlipView") && module.directive("winFlipView", function ($parse) {
+    exists("FlipView") && module.directive("winFlipView", ['$parse', function ($parse) {
         var api = {
             currentPage: BINDING_property,
             itemDataSource: BINDING_dataSource,
@@ -529,9 +529,9 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 proxy($scope, this, "itemTemplate");
-            },
+            }],
             link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
@@ -542,9 +542,9 @@
                 return flipView;
             }
         };
-    });
+    }]);
 
-    exists("Flyout") && module.directive("winFlyout", function ($parse) {
+    exists("Flyout") && module.directive("winFlyout", ['$parse', function ($parse) {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -589,7 +589,7 @@
                 return flyout;
             }
         };
-    });
+    }]);
 
     exists("GridLayout") && module.directive("winGridLayout", function () {
         var api = {
@@ -644,7 +644,7 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV><DIV class='placeholder-holder' style='display:none;' ng-transclude='true'></DIV></DIV>",
             transclude: true,
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 // The children will (may) call back before the Hub is constructed so we queue up the calls to
                 //  addSection and removeSection and execute them later.
                 $scope.deferredCalls = [];
@@ -665,7 +665,7 @@
                 this.removeSection = deferred(function (section) {
                     $scope.removeSection(section);
                 });
-            },
+            }],
             link: function ($scope, elements) {
                 var element = elements[0];
                 // NOTE: the Hub will complain if this is in the DOM when it is constructed so we temporarially remove it.
@@ -795,7 +795,7 @@
         };
     });
 
-    exists("ListView") && module.directive("winListView", function ($parse) {
+    exists("ListView") && module.directive("winListView", ['$parse', function ($parse) {
         var api = {
             currentItem: BINDING_property,
             groupDataSource: BINDING_dataSource,
@@ -835,12 +835,12 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 proxy($scope, this, "itemTemplate");
                 proxy($scope, this, "groupHeaderTemplate");
                 proxy($scope, this, "layout");
                 proxy($scope, this, "selection");
-            },
+            }],
             link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
@@ -863,9 +863,9 @@
                 return listView;
             }
         };
-    });
+    }]);
 
-    exists("Menu") && module.directive("winMenu", function ($parse) {
+    exists("Menu") && module.directive("winMenu", ['$parse', function ($parse) {
         var api = {
             alignment: BINDING_property,
             anchor: BINDING_anchor,
@@ -909,7 +909,7 @@
                 return menu;
             }
         };
-    });
+    }]);
 
     exists("MenuCommand") && module.directive("winMenuCommand", function () {
         var api = {
@@ -943,7 +943,7 @@
         };
     });
 	
-    exists("NavBar") && module.directive("winNavBar", function ($parse) {
+    exists("NavBar") && module.directive("winNavBar", ['$parse', function ($parse) {
         return {
             restrict: "E",
             replace: true,
@@ -969,7 +969,7 @@
                 return navbar;
             }
         };
-    });
+    }]);
 
     exists("NavBarCommand") && module.directive("winNavBarCommand", function () {
         var api = {
@@ -1014,9 +1014,9 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 proxy($scope, this, "template");
-            },
+            }],
             link: function ($scope, elements) {
                 var element = elements[0];
                 var bindings = [];
@@ -1046,7 +1046,7 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV><DIV class='placeholder-holder' style='display:none;' ng-transclude='true'></DIV></DIV>",
             transclude: true,
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 // The children will (may) call back before the Pivot is constructed so we queue up the calls to
                 //  addItem and removeItem and execute them later.
                 $scope.deferredCalls = [];
@@ -1066,7 +1066,7 @@
                 this.removeItem = deferred(function (item) {
                     $scope.removeItem(item);
                 });
-            },
+            }],
             link: function ($scope, elements) {
                 var element = elements[0];
                 // NOTE: the Pivot will complain if this is in the DOM when it is constructed so we temporarially remove it.
@@ -1159,7 +1159,7 @@
         };
     });
 
-    exists("SearchBox") && module.directive("winSearchBox", function ($parse) {
+    exists("SearchBox") && module.directive("winSearchBox", ['$parse', function ($parse) {
         var api = {
             chooseSuggestionOnEnter: BINDING_property,
             disabled: BINDING_property,
@@ -1195,7 +1195,7 @@
                 return searchBox;
             }
         };
-    });
+    }]);
 
     exists("SectionHeaderTemplate") && module.directive("winSectionHeaderTemplate", function () {
         return {
@@ -1301,7 +1301,7 @@
         };
     });
 
-    exists("Tooltip") && module.directive("winTooltip", function ($parse) {
+    exists("Tooltip") && module.directive("winTooltip", ['$parse', function ($parse) {
         var api = {
             contentElement: BINDING_property,
             extraClass: BINDING_property,
@@ -1319,9 +1319,9 @@
             scope: objectMap(api, function (value) { return value.binding; }),
             template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
-            controller: function ($scope) {
+            controller: ['$scope', function ($scope) {
                 proxy($scope, this, "contentElement");
-            },
+            }],
             link: function ($scope, elements, attrs) {
                 var element = elements[0];
                 var bindings = [];
@@ -1332,7 +1332,7 @@
                 return tooltip;
             }
         };
-    });
+    }]);
 
     // Tooltop is a little odd because you have to be able to specify both the element
     // which has a tooltip (the content) and the tooltip's content itself. We specify
@@ -1363,7 +1363,7 @@
 	//surface winControl property as win-control directive
 	//keep priority set to a higher value than others (default is 0)
 	//as 'link' ie. postLink functions run highest priority last
-	module.directive("winControl", function ($parse) {
+	module.directive("winControl", ['$parse', function ($parse) {
         return {
             restrict: "A",
             priority: 1,
@@ -1373,6 +1373,6 @@
                 }
             }
         };
-    });
+    }]);
 	
 }(this));

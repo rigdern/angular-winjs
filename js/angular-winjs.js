@@ -426,7 +426,46 @@
             }
         };
     });
-
+	
+	exists("AppBar") && module.directive("winAppBarSeparator", function () {
+        var api = {
+            disabled: BINDING_property,
+            extraClass: BINDING_property,
+            firstElementFocus: BINDING_property,
+            flyout: BINDING_property,
+            hidden: BINDING_property,
+            icon: BINDING_property,
+            id: BINDING_property,
+            label: BINDING_property,
+            lastElementFocus: BINDING_property,
+            section: BINDING_property,
+            selected: BINDING_property,
+            tooltip: BINDING_property,
+            type: BINDING_property,
+            onclick: BINDING_event
+        };
+        return {
+            restrict: "E",
+            replace: true,
+            scope: objectMap(api, function (value) { return value.binding; }),
+            template: "<HR ng-transclude='true'></HR>",
+            transclude: true,
+            link: function ($scope, elements) {
+                var element = elements[0];
+                element.removeAttribute("disabled");
+                element.removeAttribute("id");
+                element.removeAttribute("type");
+                var bindings = [];
+                var command;
+                var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return command; }, bindings); });
+                options.type = 'separator';
+                command = new WinJS.UI.AppBarCommand(element, options);
+                addDestroyListener($scope, command, bindings);
+                return command;
+            }
+        };
+    });
+	
     exists("BackButton") && module.directive("winBackButton", function () {
         return {
             restrict: "E",

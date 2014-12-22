@@ -745,16 +745,21 @@
             require: "^winHub",
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
-            // NOTE: there is an arbitrary wrapper here .placeholder which is used in scenarios where developers stamp
-            //       out hub sections using ng-repeat. In order to support things like that we need to infer the order
-            //       that the sections are in relative to static sections so we manage them in a .placeholder-holder
-            //       element (see winHub directive above), the placeholder always lives in that thing. The content
-            //       (meaning the real hub section) ends up being owned by the Hub.
-            template: "<DIV class='placeholder'><DIV ng-transclude='true'></DIV></DIV>",
+            template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
             link: function ($scope, elements, attrs, hub) {
-                var placeholder = elements[0];
-                var element = placeholder.firstElementChild;
+                var element = elements[0];
+                var sectionsHost = element.parentNode;
+                // NOTE: there is an arbitrary element here .placeholder which is used in scenarios where developers stamp
+                //       out hub sections using ng-repeat. In order to support things like that we need to infer the order
+                //       that the sections are in relative to static sections so we manage them in a .placeholder-holder
+                //       element (see winHub directive above), the placeholder always lives in that thing. The content
+                //       (meaning the real hub section) ends up being owned by the Hub.
+                var placeholder = document.createElement("div");
+                placeholder.className = "placeholder";
+                sectionsHost.insertBefore(placeholder, element);
+                sectionsHost.removeChild(element);
+
                 var bindings = [];
                 var section;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return section; }, bindings); });
@@ -1140,16 +1145,22 @@
             require: "^winPivot",
             replace: true,
             scope: objectMap(api, function (value) { return value.binding; }),
-            // NOTE: there is an arbitrary wrapper here .placeholder which is used in scenarios where developers stamp
-            //       out pivot sections using ng-repeat. In order to support things like that we need to infer the order
-            //       that the sections are in relative to static sections so we manage them in a .placeholder-holder
-            //       element (see winPivot directive above), the placeholder always lives in that thing. The content
-            //       (meaning the real pivot section) ends up being owned by the Hub.
-            template: "<DIV class='placeholder'><DIV ng-transclude='true'></DIV></DIV>",
+            template: "<DIV ng-transclude='true'></DIV>",
             transclude: true,
             link: function ($scope, elements, attrs, pivot) {
-                var placeholder = elements[0];
-                var element = placeholder.firstElementChild;
+                var element = elements[0];
+                var itemsHost = element.parentNode;
+
+                // NOTE: there is an arbitrary element here .placeholder which is used in scenarios where developers stamp
+                //       out pivot sections using ng-repeat. In order to support things like that we need to infer the order
+                //       that the sections are in relative to static sections so we manage them in a .placeholder-holder
+                //       element (see winPivot directive above), the placeholder always lives in that thing. The content
+                //       (meaning the real pivot section) ends up being owned by the Pivot.
+                var placeholder = document.createElement("div");
+                placeholder.className = "placeholder";
+                itemsHost.insertBefore(placeholder, element);
+                itemsHost.removeChild(element);
+
                 var bindings = [];
                 var item;
                 var options = objectMap(api, function (value, key) { return value($scope, key, element, function () { return item; }, bindings); });
